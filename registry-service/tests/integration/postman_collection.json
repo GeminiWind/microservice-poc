@@ -1,0 +1,121 @@
+{
+	"info": {
+		"_postman_id": "c3864b3d-9037-44a1-842a-652eae6fcd91",
+		"name": "[Mircoservice-POC]Registry Service",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "services",
+			"item": [
+				{
+					"name": "201 Register",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n\t\"data\": {\n\t\t\"id\": \"order-service\",\n\t\t\"type\": \"services\",\n\t\t\"attributes\": {\n\t\t\t\"name\": \"order service\",\n\t\t\t\"endpoint\": \"http://localhost:4000\"\n\t\t}\n\t}\n}"
+						},
+						"url": {
+							"raw": "{{endpoint}}/services",
+							"host": [
+								"{{endpoint}}"
+							],
+							"path": [
+								"services"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "200 Read",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "{{endpoint}}/services/order-service",
+							"host": [
+								"{{endpoint}}"
+							],
+							"path": [
+								"services",
+								"order-service"
+							],
+							"query": [
+								{
+									"key": "Content=Ty",
+									"value": "",
+									"disabled": true
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "200 List",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "{{endpoint}}/services",
+							"host": [
+								"{{endpoint}}"
+							],
+							"path": [
+								"services"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "204 Unregister",
+					"request": {
+						"method": "DELETE",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "{{endpoint}}/services/order-service",
+							"host": [
+								"{{endpoint}}"
+							],
+							"path": [
+								"services",
+								"order-service"
+							]
+						}
+					},
+					"response": []
+				}
+			],
+			"protocolProfileBehavior": {}
+		}
+	],
+	"protocolProfileBehavior": {}
+}

@@ -14,3 +14,7 @@ Registry service takes in charge of managing the state of services in the system
 ## HOW-IT-WORKS
 
 TBD
+
+## TODO
+
+[] Add job to check health of registered service
