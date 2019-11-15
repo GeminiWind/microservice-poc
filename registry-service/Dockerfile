@@ -15,7 +15,11 @@ RUN yarn
 COPY scripts scripts
 COPY src src
 
-RUN yarn build
+RUN yarn build && \
+    rm -rf src && \
+    rm -rf scripts && \
+    rm yarn.lock && \
+    rm .babelrc
 
 
 FROM node:alpine
@@ -24,7 +28,6 @@ EXPOSE 3000
 
 WORKDIR /usr/app
 
-COPY --from=builder /usr/app/build build
-COPY --from=builder /usr/app/package.json package.json
+COPY --from=builder /usr/app .
 
 CMD yarn start:prod
