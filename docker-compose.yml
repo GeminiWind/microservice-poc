@@ -1,4 +1,15 @@
-version: '3.7'
+version: '3.1'
+
 services:
   registry-service:
-    context: ./registry-service
+    build:
+      context: ./registry-service
+    ports:
+      - "3000:3000"
+    networks:
+      - microservice
+
+
+networks:
+  microservice:
+    driver: bridge
