@@ -3,7 +3,7 @@ import * as R from 'ramda';
 
 export async function createCollection(event) {
   const collectionName = R.path(['body', 'data', 'attributes', 'name'], event);
-  const connector = R.path(['connector', event]);
+  const { connector } = event;
 
   try {
     await connector.createCollection(collectionName);
@@ -20,7 +20,7 @@ export function returnResponse(event) {
   const collectionName = R.path(['body', 'data', 'attributes', 'name'], event);
 
   return {
-    status: 201,
+    statusCode: 201,
     body: {
       data: {
         type: 'collections',

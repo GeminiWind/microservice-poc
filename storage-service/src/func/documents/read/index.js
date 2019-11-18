@@ -4,7 +4,7 @@ import * as R from 'ramda';
 export async function getDocument(event) {
   const collectionName = R.path(['params', 'collectionName'], event);
   const documentId = R.path(['params', 'id'], event);
-  const connector = R.path(['connector', event]);
+  const { connector } = event;
 
   let doc;
 
@@ -30,7 +30,7 @@ export async function getDocument(event) {
 
 export function returnResponse(event) {
   return {
-    status: 200,
+    statusCode: 200,
     body: R.path(event.doc),
   };
 }

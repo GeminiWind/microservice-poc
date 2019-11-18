@@ -3,11 +3,13 @@ import * as R from 'ramda';
 
 export async function deleteCollection(event) {
   const collectionName = R.path(['params', 'collectionName'], event);
-  const connector = R.path(['connector', event]);
+  const { connector } = event;
 
   try {
     await connector.dropCollection(collectionName);
   } catch (error) {
+    console.log(`Error in deleting collection '${collectionName}'`, error);
+
     throw new InternalError(`Error in deleting collection '${collectionName}'. Try again`);
   }
 
@@ -16,7 +18,7 @@ export async function deleteCollection(event) {
 
 export function returnResponse() {
   return {
-    status: 204,
+    statusCode: 204,
   };
 }
 

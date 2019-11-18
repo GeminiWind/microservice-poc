@@ -23,11 +23,11 @@ const routes = [
   //   path: '/collections/:collectionName/documents',
   //   handler: HttpHandler(documents.list),
   // },
-  // {
-  //   method: 'POST',
-  //   path: '/collections/:collectionName/documents',
-  //   handler: HttpHandler(documents.create),
-  // },
+  {
+    method: 'POST',
+    path: '/collections/:collectionName/documents',
+    handler: HttpHandler(documents.create),
+  },
   // {
   //   method: 'PATCH',
   //   path: '/collections/:collectionName/documents/:id',
