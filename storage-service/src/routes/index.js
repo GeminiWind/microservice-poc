@@ -33,11 +33,11 @@ const routes = [
     path: '/collections/:collection/documents',
     handler: HttpHandler(documents.create),
   },
-  // {
-  //   method: 'PATCH',
-  //   path: '/collections/:collectionName/documents/:id',
-  //   handler: HttpHandler(documents.update),
-  // },
+  {
+    method: 'PATCH',
+    path: '/collections/:collection/documents/:id',
+    handler: HttpHandler(documents.update),
+  },
   {
     method: 'DELETE',
     path: '/collections/:collection/documents/:id',
