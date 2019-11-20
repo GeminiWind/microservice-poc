@@ -1,0 +1,4 @@
+#!/bin/sh
+
+rm -rf build
+yarn babel src --out-dir build
