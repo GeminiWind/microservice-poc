@@ -23,11 +23,11 @@ const routes = [
     path: '/collections/:collection/documents/:id',
     handler: HttpHandler(documents.read),
   },
-  // {
-  //   method: 'GET',
-  //   path: '/collections/:collectionName/documents',
-  //   handler: HttpHandler(documents.list),
-  // },
+  {
+    method: 'GET',
+    path: '/collections/:collection/documents',
+    handler: HttpHandler(documents.list),
+  },
   {
     method: 'POST',
     path: '/collections/:collection/documents',

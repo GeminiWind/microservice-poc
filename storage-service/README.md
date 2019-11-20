@@ -11,3 +11,8 @@ Shared storage service in micro service system
 | GET /collections/{collection}/documents/{documentId} | Get specified document by their id  |
 | PATCH /collections/{collection}/documents/{documentId} | Update specified document by their id  |
 | DELETE /collections/{collection}/documents/{documentId} | Delete  specified document by their id  |
+
+## TODOS
+
+[] Support bulk operator (insert, update)
+[] Write tests
