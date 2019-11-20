@@ -9,13 +9,18 @@ const routes = [
     handler: HttpHandler(collections.create),
   },
   {
+    method: 'PUT',
+    path: '/collections/:collection',
+    handler: HttpHandler(collections.update),
+  },
+  {
     method: 'DELETE',
-    path: '/collections/:collectionName',
+    path: '/collections/:collection',
     handler: HttpHandler(collections.remove),
   },
   {
     method: 'GET',
-    path: '/collections/:collectionName/documents/:id',
+    path: '/collections/:collection/documents/:id',
     handler: HttpHandler(documents.read),
   },
   // {
@@ -25,7 +30,7 @@ const routes = [
   // },
   {
     method: 'POST',
-    path: '/collections/:collectionName/documents',
+    path: '/collections/:collection/documents',
     handler: HttpHandler(documents.create),
   },
   // {
@@ -35,7 +40,7 @@ const routes = [
   // },
   {
     method: 'DELETE',
-    path: '/collections/:collectionName/documents/:id',
+    path: '/collections/:collection/documents/:id',
     handler: HttpHandler(documents.remove),
   },
 ];

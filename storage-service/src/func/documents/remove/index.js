@@ -2,7 +2,7 @@ import { NotFoundError, InternalError } from 'json-api-error';
 import * as R from 'ramda';
 
 export async function deleteDocument(event) {
-  const collectionName = R.path(['params', 'collectionName'], event);
+  const collectionName = R.path(['params', 'collection'], event);
   const documentId = R.path(['params', 'id'], event);
   const { connector } = event;
 
@@ -11,11 +11,11 @@ export async function deleteDocument(event) {
   try {
     const collection = connector.collection(collectionName);
 
-    doc = await collection.findAndRemove({
+    doc = await collection.findOneAndDelete({
       _id: documentId,
     });
   } catch (error) {
-    throw new InternalError('Error in getting document. Try again');
+    throw new InternalError('Error in deleting document. Try again');
   }
 
   if (!doc) {
@@ -25,10 +25,9 @@ export async function deleteDocument(event) {
   return event;
 }
 
-export function returnResponse(event) {
+export function returnResponse() {
   return {
-    statusCode: 200,
-    body: R.path(event.doc),
+    statusCode: 204,
   };
 }
 

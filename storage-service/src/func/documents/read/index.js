@@ -2,7 +2,7 @@ import { NotFoundError, InternalError } from 'json-api-error';
 import * as R from 'ramda';
 
 export async function getDocument(event) {
-  const collectionName = R.path(['params', 'collectionName'], event);
+  const collectionName = R.path(['params', 'collection'], event);
   const documentId = R.path(['params', 'id'], event);
   const { connector } = event;
 
@@ -31,7 +31,11 @@ export async function getDocument(event) {
 export function returnResponse(event) {
   return {
     statusCode: 200,
-    body: R.path(event.doc),
+    body: {
+      id: event.doc._id, // eslint-disable-line no-underscore-dangle
+      type: 'documents',
+      attributes: R.omit(['_id', 'id'], event.doc),
+    },
   };
 }
 

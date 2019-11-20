@@ -2,15 +2,15 @@ import { InternalError } from 'json-api-error';
 import * as R from 'ramda';
 
 export async function deleteCollection(event) {
-  const collectionName = R.path(['params', 'collectionName'], event);
+  const collection = R.path(['params', 'collection'], event);
   const { connector } = event;
 
   try {
-    await connector.dropCollection(collectionName);
+    await connector.dropCollection(collection);
   } catch (error) {
-    console.log(`Error in deleting collection '${collectionName}'`, error);
+    console.log(`Error in deleting collection '${collection}'`, error);
 
-    throw new InternalError(`Error in deleting collection '${collectionName}'. Try again`);
+    throw new InternalError(`Error in deleting collection '${collection}'. Try again`);
   }
 
   return event;
