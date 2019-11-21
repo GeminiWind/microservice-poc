@@ -6,7 +6,6 @@ COPY [ \
     "package.json", \
     "yarn.lock", \
     ".babelrc", \
-    "services.json", \
     "./" \
     ]
 

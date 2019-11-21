@@ -16,3 +16,6 @@
 # Ignore related-coverage
 **/.nyc_output
 **/coverage
+
+# Ignore service catalog state
+./registry-service/services.json

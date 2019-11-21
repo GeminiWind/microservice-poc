@@ -5,6 +5,8 @@ services:
   registry-service:
     build:
       context: ./registry-service
+    volumes: 
+      - ./registry-service/services.json:/usr/app/services.json
     ports:
       - "3000:3000"
     networks:
@@ -40,7 +42,6 @@ services:
       - "27017:27017"
     networks:
       - microservice
-
 
 networks:
   microservice:
