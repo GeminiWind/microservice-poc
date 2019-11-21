@@ -12,12 +12,11 @@ services:
   storage-service:
     build:
       context: ./storage-service
-    env_file:
-      - .env
     environment: 
       DB_HOST: database
       DB_PORT: 27017
-      DB_NAME: m_db
+      DB_NAME: $DB_NAME
+      DB_MAIN_TABLE: $DB_MAIN_TABLE
       # DB_ROOT_USERNAME: admin
       # DB_ROOT_PASSWORD: admin
     ports:
@@ -34,8 +33,6 @@ services:
     # DEPENDENCIES
   database:
     image: mongo:latest
-    env_file:
-      - .env
     # environment: 
     #   MONGO_INITDB_ROOT_USERNAME: admin
     #   MONGO_INITDB_ROOT_PASSWORD: admin
@@ -43,7 +40,6 @@ services:
       - "27017:27017"
     networks:
       - microservice
-
 
 
 networks:

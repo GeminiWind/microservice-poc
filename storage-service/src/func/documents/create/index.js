@@ -1,5 +1,6 @@
 import * as R from 'ramda';
 import { InternalError } from 'json-api-error';
+import { MAIN_COLLECTION_NAME } from '../../../constants';
 
 export function validateDocument(event) {
   // TODO: implement validate mechanism
@@ -7,16 +8,15 @@ export function validateDocument(event) {
 }
 
 export async function createDocument(event) {
-  const collection = R.path(['params', 'collection'], event);
-  const document = R.path(['body'], event);
+  const document = R.path(['body', 'data'], event);
   const { connector } = event;
 
   let createdDoc;
 
   try {
-    createdDoc = await connector.collection(collection).insertOne({
-      _id: document.id || document._id, // eslint-disable-line no-underscore-dangle
-      ...R.omit(['id', '_id'], document),
+    createdDoc = await connector.collection(MAIN_COLLECTION_NAME).insertOne({
+      _id: document.id, // eslint-disable-line no-underscore-dangle
+      ...R.pick(['Path', 'Content', 'Type', 'Attributes'], document.attributes),
     });
   } catch (error) {
     console.log('Error in inserting document', error);
@@ -32,7 +32,7 @@ export async function createDocument(event) {
 
 export function returnResponse(event) {
   const { createdDoc } = event;
-  const document = R.path(['body'], event);
+  const documentAttributes = R.path(['body', 'data', 'attributes'], event);
 
   return {
     statusCode: 201,
@@ -40,7 +40,7 @@ export function returnResponse(event) {
       data: {
         id: createdDoc.insertedId, // eslint-disable-line no-underscore-dangle
         type: 'documents',
-        attributes: R.omit(['id', '_id'], document),
+        attributes: R.pick(['Path', 'Content', 'Type', 'Attributes'], documentAttributes),
       },
     },
   };
