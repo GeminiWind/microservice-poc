@@ -1,14 +1,13 @@
 import { InternalError } from 'json-api-error';
 import * as R from 'ramda';
+import { MAIN_COLLECTION_NAME } from '../../../constants';
 
 export async function listingDocuments(event) {
-  const collectionName = R.path(['params', 'collection'], event);
-
   const skip = parseInt(R.path(['query', 'skip'], event), 10);
   const limit = parseInt(R.path(['query', 'limit'], event), 10);
 
-  let sort = R.path(['query', 'sort'], event);
   // normalize sort op
+  let sort = R.path(['query', 'sort'], event);
   if (sort) {
     sort = sort.split(',').reduce((acc, sortField) => {
       if (sortField.startsWith('-')) {
@@ -22,7 +21,6 @@ export async function listingDocuments(event) {
   }
 
   let query = {};
-
   if (R.path(['query', 'query'], event)) {
     try {
       // TODO: validate query to prevent injection
@@ -35,12 +33,11 @@ export async function listingDocuments(event) {
     }
   }
 
-
   const { connector } = event;
 
   let documents;
   try {
-    const collection = connector.collection(collectionName);
+    const collection = connector.collection(MAIN_COLLECTION_NAME);
     documents = await collection.find(query, {
       skip: skip && skip > 0 ? skip : 0,
       limit: limit && limit > 0 ? limit : 0,
@@ -64,7 +61,8 @@ export function returnResponse(event) {
     body: {
       data: event.documents.map(doc => ({
         id: doc._id, // eslint-disable-line no-underscore-dangle
-        ...R.omit(['_id'], doc),
+        type: 'documents',
+        attributes: R.pick(['Path', 'Content', 'Type', 'Attributes'], doc),
       })),
     },
   };

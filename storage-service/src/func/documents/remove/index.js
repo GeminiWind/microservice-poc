@@ -1,15 +1,15 @@
 import { NotFoundError, InternalError } from 'json-api-error';
 import * as R from 'ramda';
+import { MAIN_COLLECTION_NAME } from '../../../constants';
 
 export async function deleteDocument(event) {
-  const collectionName = R.path(['params', 'collection'], event);
   const documentId = R.path(['params', 'id'], event);
   const { connector } = event;
 
   let doc;
 
   try {
-    const collection = connector.collection(collectionName);
+    const collection = connector.collection(MAIN_COLLECTION_NAME);
 
     doc = await collection.findOneAndDelete({
       _id: documentId,
