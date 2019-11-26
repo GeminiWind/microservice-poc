@@ -1,6 +1,7 @@
 import express from 'express';
 import bodyParser from 'body-parser';
 import { InternalError } from 'json-api-error';
+import { jsonApiErrorHandler } from 'json-api-error/middlewares';
 import { MongoClient } from 'mongodb';
 import routes from './routes';
 import initMainCollection from './tasks/initMainCollection';
@@ -40,6 +41,8 @@ app.use((req, _, next) => {
 routes.map((route) => {
   app[route.method.toLowerCase()](route.path, route.handler);
 });
+
+app.use(jsonApiErrorHandler);
 
 app.listen(port, () => {
   console.log(`Storage Service is up at ${port}.`);
