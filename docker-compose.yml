@@ -19,13 +19,11 @@ services:
       DB_PORT: 27017
       DB_NAME: $DB_NAME
       DB_MAIN_TABLE: $DB_MAIN_TABLE
+      WAIT_HOSTS: database:27017
       # DB_ROOT_USERNAME: admin
       # DB_ROOT_PASSWORD: admin
     ports:
       - "3001:3001"
-    # volumes:
-    #   - ./wait-for-it.sh:/usr/wait-for-it.sh
-    # command: sh -c '/usr/wait-for-it.sh database:27017 -- yarn start:prod'
     depends_on:
       - database
     restart: always

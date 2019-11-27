@@ -25,8 +25,11 @@ FROM node:alpine
 
 EXPOSE 3001
 
+ADD https://github.com/ufoscout/docker-compose-wait/releases/download/2.6.0/wait /wait
+RUN chmod +x /wait
+
 WORKDIR /usr/app
 
 COPY --from=builder /usr/app .
 
-CMD yarn start:prod
+CMD /wait && yarn start:prod
