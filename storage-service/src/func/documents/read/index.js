@@ -3,7 +3,7 @@ import * as R from 'ramda';
 import { MAIN_COLLECTION_NAME } from '../../../constants';
 
 export async function getDocument(event) {
-  const documentId = R.path(['params', 'id'], event);
+  const path = R.path(['params', 'path'], event);
   const { connector } = event;
 
   let doc;
@@ -12,14 +12,16 @@ export async function getDocument(event) {
     const collection = connector.collection(MAIN_COLLECTION_NAME);
 
     doc = await collection.findOne({
-      _id: documentId,
+      Path: path,
     });
   } catch (error) {
     throw new InternalError('Error in getting document. Try again');
   }
 
   if (!doc) {
-    throw new NotFoundError(`Document with id:${documentId} was not found.`);
+    console.log(`Document with Path:${path} was not found.`);
+
+    throw new NotFoundError(`Document with Path:${path} was not found.`);
   }
 
   return {

@@ -4,7 +4,7 @@ import * as documents from '../func/documents';
 const routes = [
   {
     method: 'GET',
-    path: '/documents/:id',
+    path: '/documents/:path(*)',
     handler: HttpHandler(documents.read),
   },
   {
@@ -19,12 +19,12 @@ const routes = [
   },
   {
     method: 'PATCH',
-    path: '/documents/:id',
+    path: '/documents/:path(*)',
     handler: HttpHandler(documents.update),
   },
   {
     method: 'DELETE',
-    path: '/documents/:id',
+    path: '/documents/:path(*)',
     handler: HttpHandler(documents.remove),
   },
 ];
