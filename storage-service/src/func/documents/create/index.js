@@ -15,7 +15,6 @@ export async function createDocument(event) {
 
   try {
     createdDoc = await connector.collection(MAIN_COLLECTION_NAME).insertOne({
-      _id: document.id, // eslint-disable-line no-underscore-dangle
       ...R.pick(['Path', 'Content', 'Type', 'Attributes'], document.attributes),
     });
   } catch (error) {

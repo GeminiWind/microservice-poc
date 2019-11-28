@@ -18,4 +18,4 @@
 **/coverage
 
 # Ignore service catalog state
-./registry-service/services.json
+registry-service/services.json

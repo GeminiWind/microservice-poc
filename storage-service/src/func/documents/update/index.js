@@ -9,7 +9,7 @@ export async function validateRequest(event) {
 }
 
 export async function checkDocumentIsExisting(event) {
-  const documentId = R.path(['params', 'id'], event);
+  const path = R.path(['params', 'path'], event);
   const { connector } = event;
 
   let isExisting;
@@ -18,21 +18,25 @@ export async function checkDocumentIsExisting(event) {
     const collection = connector.collection(MAIN_COLLECTION_NAME);
 
     isExisting = await collection.findOne({
-      _id: documentId,
+      Path: path,
     });
   } catch (error) {
+    console.log('Error in getting document', error);
+
     throw new InternalError('Error in getting document. Try again');
   }
 
   if (!isExisting) {
-    throw new NotFoundError(`Document with id:${documentId} was not found.`);
+    console.log(`Document with Path:"${path}" was not found.`);
+
+    throw new NotFoundError(`Document with Path:"${path}" was not found.`);
   }
 
   return event;
 }
 
 export async function updateDocument(event) {
-  const documentId = R.path(['params', 'id'], event);
+  const path = R.path(['params', 'path'], event);
   const { connector } = event;
 
   let commandResult;
@@ -41,7 +45,7 @@ export async function updateDocument(event) {
 
     commandResult = await collection.findOneAndUpdate(
       {
-        _id: documentId,
+        Path: path,
       }, {
         $set: R.path(['body', 'data', 'attributes'], event),
       },
