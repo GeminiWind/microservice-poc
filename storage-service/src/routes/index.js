@@ -1,31 +1,31 @@
-import HttpHandler from '../lib/HttpHandler';
+import { httpHandler } from '@hai.dinh/service-libraries';
 import * as documents from '../func/documents';
 
 const routes = [
   {
     method: 'GET',
     path: '/documents/:path(*)',
-    handler: HttpHandler(documents.read),
+    handler: httpHandler(documents.read),
   },
   {
     method: 'GET',
     path: '/documents',
-    handler: HttpHandler(documents.list),
+    handler: httpHandler(documents.list),
   },
   {
     method: 'POST',
     path: '/documents',
-    handler: HttpHandler(documents.create),
+    handler: httpHandler(documents.create),
   },
   {
     method: 'PATCH',
     path: '/documents/:path(*)',
-    handler: HttpHandler(documents.update),
+    handler: httpHandler(documents.update),
   },
   {
     method: 'DELETE',
     path: '/documents/:path(*)',
-    handler: HttpHandler(documents.remove),
+    handler: httpHandler(documents.remove),
   },
 ];
 
