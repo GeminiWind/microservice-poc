@@ -1,4 +1,4 @@
-import { NotFoundError, InternalError } from 'json-api-error';
+import JsonApiError, { NotFoundError, InternalError } from 'json-api-error';
 import * as R from 'ramda';
 import { MAIN_COLLECTION_NAME } from '../../../constants';
 
@@ -41,6 +41,15 @@ export function returnResponse(event) {
   };
 }
 
-export default req => Promise.resolve(req)
-  .then(getDocument)
-  .then(returnResponse);
+export default R.tryCatch(
+  R.pipeP(
+    req => Promise.resolve(req),
+    getDocument,
+    returnResponse,
+  ),
+  (e) => {
+    if (!(e instanceof JsonApiError)) {
+      throw new InternalError('Encounter error in reading document');
+    }
+  },
+);

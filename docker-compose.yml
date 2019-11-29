@@ -3,6 +3,7 @@ version: '3.1'
 services:
   # SERVICES
   registry-service:
+    container_name: registry-service
     build:
       context: ./registry-service
     volumes: 
@@ -12,6 +13,7 @@ services:
     networks:
       - microservice
   storage-service:
+    container_name: storage-service
     build:
       context: ./storage-service
     environment: 
