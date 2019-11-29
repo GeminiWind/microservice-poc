@@ -28,10 +28,20 @@ services:
       - "3001:3001"
     depends_on:
       - database
-    restart: always
     networks:
       - microservice
-  
+  auth-service:
+    container_name: auth-service
+    build:
+      context: ./auth-service
+    environment: 
+      SECRET_KEY: $SECRET_KEY
+    ports:
+      - "3002:3002"
+    depends_on:
+      - storage-service
+    networks:
+      - microservice
     # DEPENDENCIES
   database:
     image: mongo:latest
