@@ -1,5 +1,5 @@
 import * as R from 'ramda';
-import { InternalError } from 'json-api-error';
+import JsonApiError, { InternalError } from 'json-api-error';
 import { MAIN_COLLECTION_NAME } from '../../../constants';
 
 export function validateDocument(event) {
@@ -42,10 +42,22 @@ export function returnResponse(event) {
         attributes: R.pick(['Path', 'Content', 'Type', 'Attributes'], documentAttributes),
       },
     },
+    headers: {
+      Accept: 'application/vnd.api+json',
+    },
   };
 }
 
-export default req => Promise.resolve(req)
-  .then(validateDocument)
-  .then(createDocument)
-  .then(returnResponse);
+export default R.tryCatch(
+  R.pipeP(
+    req => Promise.resolve(req),
+    validateDocument,
+    createDocument,
+    returnResponse,
+  ),
+  (e) => {
+    if (!(e instanceof JsonApiError)) {
+      throw new InternalError('Encounter error in inserting document');
+    }
+  },
+);

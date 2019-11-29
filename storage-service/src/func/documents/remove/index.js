@@ -1,4 +1,4 @@
-import { NotFoundError, InternalError } from 'json-api-error';
+import JsonApiError, { NotFoundError, InternalError } from 'json-api-error';
 import * as R from 'ramda';
 import { MAIN_COLLECTION_NAME } from '../../../constants';
 
@@ -31,6 +31,15 @@ export function returnResponse() {
   };
 }
 
-export default req => Promise.resolve(req)
-  .then(deleteDocument)
-  .then(returnResponse);
+export default R.tryCatch(
+  R.pipeP(
+    req => Promise.resolve(req),
+    deleteDocument,
+    returnResponse,
+  ),
+  (e) => {
+    if (!(e instanceof JsonApiError)) {
+      throw new InternalError('Encounter error in removing document');
+    }
+  },
+);

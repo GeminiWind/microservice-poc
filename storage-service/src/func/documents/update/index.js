@@ -1,4 +1,4 @@
-import { InternalError, NotFoundError } from 'json-api-error';
+import JsonApiError, { InternalError, NotFoundError } from 'json-api-error';
 import * as R from 'ramda';
 import { MAIN_COLLECTION_NAME } from '../../../constants';
 
@@ -78,8 +78,17 @@ export function returnResponse(event) {
   };
 }
 
-export default req => Promise.resolve(req)
-  .then(validateRequest)
-  .then(checkDocumentIsExisting)
-  .then(updateDocument)
-  .then(returnResponse);
+export default R.tryCatch(
+  R.pipeP(
+    req => Promise.resolve(req),
+    validateRequest,
+    checkDocumentIsExisting,
+    updateDocument,
+    returnResponse,
+  ),
+  (e) => {
+    if (!(e instanceof JsonApiError)) {
+      throw new InternalError('Encounter error in updating document');
+    }
+  },
+);

@@ -1,4 +1,4 @@
-import { InternalError } from 'json-api-error';
+import JsonApiError, { InternalError } from 'json-api-error';
 import * as R from 'ramda';
 import { MAIN_COLLECTION_NAME } from '../../../constants';
 
@@ -68,6 +68,15 @@ export function returnResponse(event) {
   };
 }
 
-export default req => Promise.resolve(req)
-  .then(listingDocuments)
-  .then(returnResponse);
+export default R.tryCatch(
+  R.pipeP(
+    req => Promise.resolve(req),
+    listingDocuments,
+    returnResponse,
+  ),
+  (e) => {
+    if (!(e instanceof JsonApiError)) {
+      throw new InternalError('Encounter error in listing document');
+    }
+  },
+);
