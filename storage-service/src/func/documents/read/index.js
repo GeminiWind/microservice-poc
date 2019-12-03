@@ -15,6 +15,8 @@ export async function getDocument(event) {
       Path: path,
     });
   } catch (error) {
+    console.log('Error in getting document', error);
+
     throw new InternalError('Error in getting document. Try again');
   }
 

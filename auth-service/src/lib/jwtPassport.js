@@ -6,7 +6,7 @@ const storageClient = new StorageClient();
 export default function jwtPassport(passport) {
   const options = {
     jwtFromRequest: ExtractJwt.fromAuthHeaderAsBearerToken(),
-    secretOrKey: process.env.APP_KEY,
+    secretOrKey: process.env.SECRET_KEY,
   };
 
   passport.use(new JwtStrategy(options, async (jwtPayload, done) => {

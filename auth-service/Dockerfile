@@ -1,4 +1,4 @@
-FROM node:alpine as builder
+FROM node as builder
 
 WORKDIR /usr/app
 
@@ -8,8 +8,7 @@ COPY [ \
     ".babelrc", \
     "./" \
     ]
-RUN apk --no-cache add --virtual builds-deps build-base python && \
-    yarn
+RUN yarn
 
 COPY scripts scripts
 COPY src src
@@ -19,7 +18,6 @@ RUN yarn build && \
     rm -rf scripts && \
     rm yarn.lock && \
     rm .babelrc
-
 
 FROM node:alpine
 

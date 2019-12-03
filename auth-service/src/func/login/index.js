@@ -74,7 +74,7 @@ export async function generateAccessToken(req) {
       email: user.email,
       sub: user.email,
     },
-    process.env.APP_KEY,
+    process.env.SECRET_KEY,
     {
       expiresIn: '30m',
     },
@@ -141,7 +141,7 @@ export async function exchangeRefreshTokenToAccessToken(req) {
       email: user.email,
       sub: user.email,
     },
-    process.env.APP_KEY,
+    process.env.SECRET_KEY,
     {
       expiresIn: '30m',
     },
