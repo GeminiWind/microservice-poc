@@ -1,8 +1,8 @@
 import jwt from 'jsonwebtoken';
 import moment from 'moment';
 import randToken from 'rand-token';
-import isMatchingWithHashedPassword from './helpers/isMatchingWithHashedPassword';
 import { NotFoundError, BadRequestError } from 'json-api-error';
+import isMatchingWithHashedPassword from './helpers/isMatchingWithHashedPassword';
 import { PASSWORD_GRANT_TYPE, REFRESH_TOKEN_GRANT_TYPE } from '../../constants';
 
 export function validateRequest(req) {
@@ -38,7 +38,7 @@ export async function getUserByEmail(req) {
   if (res.statusCode === 404) {
     instrumentation.error('Your account does not exist.');
 
-    throw new NotFoundError(`Your account does not exist or invalid.`);
+    throw new NotFoundError('Your account does not exist or invalid.');
   }
 
   return {
@@ -114,7 +114,7 @@ export async function verifyRefreshToken(req) {
 
 export async function exchangeRefreshTokenToAccessToken(req) {
   const {
-    storageLibrary,
+    storageClient,
     instrumentation,
     cache,
     body: { data: { attributes: { refreshToken } } },
@@ -124,7 +124,7 @@ export async function exchangeRefreshTokenToAccessToken(req) {
   const { email } = JSON.parse(cacheValue);
 
   const { user } = await getUserByEmail({
-    storageLibrary,
+    storageClient,
     instrumentation,
     body: {
       data: {

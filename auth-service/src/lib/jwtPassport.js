@@ -1,5 +1,7 @@
 import { Strategy as JwtStrategy, ExtractJwt } from 'passport-jwt';
-import storageLibrary from './storageLibrary';
+import { StorageClient } from '@hai.dinh/service-libraries';
+
+const storageClient = new StorageClient();
 
 export default function jwtPassport(passport) {
   const options = {
@@ -7,25 +9,32 @@ export default function jwtPassport(passport) {
     secretOrKey: process.env.APP_KEY,
   };
 
-  passport.use(new JwtStrategy(options, (jwtPayload, done) => {
+  passport.use(new JwtStrategy(options, async (jwtPayload, done) => {
     const {
       email,
     } = jwtPayload;
 
-    storageLibrary.get({
-      Path: `users/${email}`,
-    }).then((record) => {
-      if (record) {
+    try {
+      const response = await storageClient.get(`users/${email}`);
+
+      if (response.statusCode === 200) {
         const {
-          Content: {
-            password,
-            ...userAttributesWithoutPassword
+          body: {
+            Content: {
+              password,
+              ...userAttributesWithoutPassword
+            },
           },
-        } = record;
+        } = response;
+
         done(null, {
           ...userAttributesWithoutPassword,
         });
-      } else done(null, false);
-    }).catch(error => done(error, false));
+      } else {
+        done(null, false);
+      }
+    } catch (err) {
+      done(err, false);
+    }
   }));
 }

@@ -2,7 +2,7 @@ import express from 'express';
 import bodyParser from 'body-parser';
 import passport from 'passport';
 import { jsonApiErrorHandler } from 'json-api-error/middlewares';
-import { useStorage } from '@hai.dinh/service-libraries/middlewares'
+import { useStorage } from '@hai.dinh/service-libraries/middlewares';
 import { logger, jwtPassport } from './lib';
 import { loggingHttpRequest, malformedErrorHandler } from './lib/middlewares';
 import routes from './routes';
@@ -35,4 +35,3 @@ app.use(jsonApiErrorHandler);
 app.listen(port, () => {
   console.log(`Auth Service is up at ${port}.`);
 });
-

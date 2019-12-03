@@ -4,14 +4,6 @@ import register from '../func/register';
 
 const routes = [
   {
-    path: '/health',
-    method: 'GET',
-    handler: () => ({
-      statusCode: 200,
-      body: {},
-    }),
-  },
-  {
     path: '/tokens',
     method: 'POST',
     handler: httpHandler(login),
@@ -19,8 +11,8 @@ const routes = [
   {
     path: '/users',
     method: 'POST',
-    controller: httpHandler(register),
-  }
+    handler: httpHandler(register),
+  },
 ];
 
 export default routes;

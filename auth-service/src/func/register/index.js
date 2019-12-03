@@ -1,19 +1,22 @@
 import bcrypt from 'bcrypt';
-import { BadRequestError, InternalError } from '../../lib/errors';
-
-const SALT_ROUND = 10;
+import * as R from 'ramda';
+import JsonApiError, { BadRequestError, InternalError } from 'json-api-error';
+import { schemaValidator } from '@hai.dinh/service-libraries';
+import { SALT_ROUND } from '../../constants';
+import schemas from '../../resources/schemas';
 
 export function validateRequest(req) {
-  // const { schemaValidator, instrumentation } = req;
-  // const isValid = schemaValidator.validate('https://heligram.com/create-user+v1.json', req.body);
+  const validator = schemaValidator.compile(schemas.createUserSchema);
+  const isValid = validator(req.body);
 
-  // if (!isValid) {
-  //   instrumentation.error('Error in validate request %s', JSON.stringify(schemaValidator.errors, null, 2));
+  if (!isValid) {
+    console.error('Request is invalid', JSON.stringify(validator.errors, null, 2));
 
-  //   throw new BadRequestError({
-  //     source: schemaValidator.errors,
-  //   });
-  // }
+    throw new BadRequestError({
+      detail: 'Request is invalid',
+      source: validator.errors,
+    });
+  }
 
   return req;
 }
@@ -36,7 +39,7 @@ export async function isUserEmailExist(req) {
   if (res.statusCode === 200) {
     instrumentation.error(`User with ${email} already exist`);
 
-    throw new BadRequestError(`Your account is already existing or invalid.`);
+    throw new BadRequestError('Your account is already existing or invalid.');
   }
 
   return req;
@@ -56,10 +59,8 @@ export async function createUser(req) {
   const salt = bcrypt.genSaltSync(SALT_ROUND);
   const hashedPassword = bcrypt.hashSync(attributes.password, salt);
 
-  const Path = `users/${attributes.email}`;
-
   const record = {
-    Path,
+    Path: `users/${attributes.email}`,
     Content: {
       email: attributes.email,
       password: hashedPassword,
@@ -92,8 +93,17 @@ export function returnResponse(req) {
   };
 }
 
-export default req => Promise.resolve(req)
-  .then(validateRequest)
-  .then(isUserEmailExist)
-  .then(createUser)
-  .then(returnResponse);
+export default R.tryCatch(
+  R.pipeP(
+    req => Promise.resolve(req),
+    validateRequest,
+    isUserEmailExist,
+    createUser,
+    returnResponse,
+  ),
+  (e) => {
+    if (!(e instanceof JsonApiError)) {
+      throw new InternalError('Encounter error in creating user');
+    }
+  },
+);
