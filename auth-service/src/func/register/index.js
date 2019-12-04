@@ -34,7 +34,7 @@ export async function isUserEmailExist(req) {
     },
   } = req;
 
-  const res = await storageClient.get(`user/${email}`);
+  const res = await storageClient.get(`users/${email}`);
 
   if (res.statusCode === 200) {
     instrumentation.error(`User with ${email} already exist`);
@@ -60,7 +60,6 @@ export async function createUser(req) {
   const hashedPassword = bcrypt.hashSync(attributes.password, salt);
 
   const record = {
-    Path: `users/${attributes.email}`,
     Content: {
       email: attributes.email,
       password: hashedPassword,
@@ -69,7 +68,8 @@ export async function createUser(req) {
   };
 
   try {
-    await storageClient.create(record);
+    const path = `users/${attributes.email}`;
+    await storageClient.create(path, record);
   } catch (error) {
     instrumentation.error('Error in creating user.', error);
 

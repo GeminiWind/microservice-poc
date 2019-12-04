@@ -22,7 +22,7 @@ export default {
             attributes: {
               type: 'object',
               properties: {
-                grantType: {
+                grant_type: {
                   type: 'string',
                   enum: ['password'],
                 },
@@ -50,7 +50,7 @@ export default {
                   },
                 ],
               },
-              required: ['grantType', 'email', 'password', 'scopes'],
+              required: ['grant_type', 'email', 'password'],
             },
           },
           required: ['type', 'attributes'],
@@ -70,16 +70,16 @@ export default {
             attributes: {
               type: 'object',
               properties: {
-                grantType: {
+                grant_type: {
                   type: 'string',
-                  enum: ['refreshToken'],
+                  enum: ['refresh_token'],
                 },
-                refreshToken: {
+                refresh_token: {
                   type: 'string',
                   description: 'Refresh Token',
                 },
               },
-              required: ['grantType', 'refreshToken'],
+              required: ['grant_type', 'refresh_token'],
             },
           },
           required: ['type', 'attributes'],
