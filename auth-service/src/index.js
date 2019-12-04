@@ -26,7 +26,7 @@ jwtPassport(passport);
 
 // initialize routes
 routes.map((route) => {
-  app[route.method.toLowerCase()](route.path, route.handler);
+  app[route.method.toLowerCase()](route.path, route.middlewares || [], route.handler);
 });
 
 app.use(malformedErrorHandler);

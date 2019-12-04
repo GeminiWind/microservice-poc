@@ -1,9 +1,9 @@
 import loggingHttpRequest from './loggingHttpRequest';
 import malformedErrorHandler from './malformedErrorHandler';
-import unauthorizedErrorHandler from './unauthorizedErrorHandler';
+import authenticate from './authenticate';
 
 export {
   loggingHttpRequest,
   malformedErrorHandler,
-  unauthorizedErrorHandler,
+  authenticate,
 };
