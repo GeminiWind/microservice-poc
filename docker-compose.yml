@@ -20,8 +20,6 @@ services:
       context: ./registry-service
     volumes: 
       - ./registry-service/services.json:/usr/app/services.json
-    ports:
-      - "3000:3000"
     networks:
       - microservice
   storage-service:
@@ -36,8 +34,6 @@ services:
       WAIT_HOSTS: database:27017
       # DB_ROOT_USERNAME: admin
       # DB_ROOT_PASSWORD: admin
-    ports:
-      - "3001:3001"
     depends_on:
       - database
     networks:
@@ -48,8 +44,6 @@ services:
       context: ./auth-service
     environment: 
       SECRET_KEY: ${SECRET_KEY:-2mHMHkCw10a1MKlTv8jiP60BFNKhbr8Fy1cIWQlqzAIEPDYIF3}
-    ports:
-      - "3002:3002"
     depends_on:
       - storage-service
     networks:
@@ -58,8 +52,6 @@ services:
     container_name: order-service
     build:
       context: ./order-service
-    ports:
-      - "3003:3003"
     networks:
       - microservice
     # DEPENDENCIES
@@ -68,8 +60,6 @@ services:
     # environment: 
     #   MONGO_INITDB_ROOT_USERNAME: admin
     #   MONGO_INITDB_ROOT_PASSWORD: admin
-    ports:
-      - "27017:27017"
     networks:
       - microservice
 

@@ -5,7 +5,7 @@ import { generateToken } from '../helpers';
 import { EXPIRY_ACCESS_TOKEN } from '../../../constants';
 
 export function extractRefreshToken(req) {
-  const refreshToken = R.path(['body', 'data', 'attributes', 'refresh_token'], req);
+  const refreshToken = R.path(['query', 'refresh_token'], req);
 
   const decoded = jwt.verify(refreshToken, process.env.SECRET_KEY);
   const email = R.path(['email'], decoded);

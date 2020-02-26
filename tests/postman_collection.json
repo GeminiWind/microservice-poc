@@ -1,0 +1,260 @@
+{
+	"info": {
+		"_postman_id": "c693bf66-f2a8-49d4-8a03-e29572ead4b0",
+		"name": "Mircoservices",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "auth",
+			"item": [
+				{
+					"name": "200 Create user",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "bb0ae6e7-0b36-4d57-9626-701607d01258",
+								"exec": [
+									"pm.test(\"Status code is 201\", function () {",
+									"    pm.response.to.have.status(201);",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/vnd.api+json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n\t\"data\": {\n\t\t\"type\": \"users\",\n\t\t\"attributes\": {\n\t\t\t\"email\": \"haidv@gmail.com\",\n\t\t\t\"password\": \"123456\"\n\t\t}\n\t}\n}"
+						},
+						"url": {
+							"raw": "{{endpoint}}/users",
+							"host": [
+								"{{endpoint}}"
+							],
+							"path": [
+								"users"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "200 OAuth Client Credentials",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "56fbdb3b-477d-40db-a947-f7f311ecf35a",
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {",
+									"    pm.response.to.have.status(200);",
+									"});",
+									"",
+									"pm.test(\"Response is valid\", function () {",
+									"    var jsonData = pm.response.json();",
+									"    pm.expect(jsonData.data.attributes).to.have.all.keys('access_token', 'refresh_token', 'expires_in', 'token_type');",
+									"    ",
+									"    pm.environment.set(\"access_token\", jsonData.data.attributes.access_token);",
+									"    pm.environment.set(\"refresh_token\", jsonData.data.attributes.refresh_token);",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/vnd.api+json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n\t\"data\": {\n\t\t\"type\": \"tokens\",\n\t\t\"attributes\": {\n\t\t\t\"email\": \"haidv@gmail.com\",\n\t\t\t\"password\": \"123456\"\n\t\t}\n\t}\n}"
+						},
+						"url": {
+							"raw": "{{endpoint}}/oauth/token?grant_type=client_credentials",
+							"host": [
+								"{{endpoint}}"
+							],
+							"path": [
+								"oauth",
+								"token"
+							],
+							"query": [
+								{
+									"key": "Content-Type",
+									"value": "app",
+									"disabled": true
+								},
+								{
+									"key": "grant_type",
+									"value": "client_credentials"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "200 OAuth Refresh Token",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "2f0d33c5-5074-4e1a-bbc7-dd9ef3c72d6f",
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {",
+									"    pm.response.to.have.status(200);",
+									"});",
+									"",
+									"pm.test(\"Response is valid\", function () {",
+									"    var jsonData = pm.response.json();",
+									"    pm.expect(jsonData.data.attributes).to.have.all.keys('access_token', 'refresh_token', 'expires_in', 'token_type');",
+									"    ",
+									"    pm.environment.set(\"access_token\", jsonData.data.attributes.access_token);",
+									"    pm.environment.set(\"refresh_token\", jsonData.data.attributes.refresh_token);",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"type": "text",
+								"value": "application/vnd.api+json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n\t\"data\": {\n\t\t\"type\": \"tokens\",\n\t\t\"attributes\": {\n\t\t\t\"email\": \"haidv@gmail.com\",\n\t\t\t\"password\": \"123456\"\n\t\t}\n\t}\n}"
+						},
+						"url": {
+							"raw": "{{endpoint}}/oauth/token?grant_type=refresh_token&refresh_token={{refresh_token}}",
+							"host": [
+								"{{endpoint}}"
+							],
+							"path": [
+								"oauth",
+								"token"
+							],
+							"query": [
+								{
+									"key": "grant_type",
+									"value": "refresh_token"
+								},
+								{
+									"key": "Content-Type",
+									"value": "app",
+									"disabled": true
+								},
+								{
+									"key": "refresh_token",
+									"value": "{{refresh_token}}"
+								}
+							]
+						}
+					},
+					"response": []
+				}
+			],
+			"protocolProfileBehavior": {}
+		},
+		{
+			"name": "order-service",
+			"item": [
+				{
+					"name": "200 List",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "6125f798-b6d9-4e1f-a619-7d96d7bb3c94",
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {",
+									"    pm.response.to.have.status(200);",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{access_token}}",
+								"type": "text"
+							},
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "{{endpoint}}/orders",
+							"host": [
+								"{{endpoint}}"
+							],
+							"path": [
+								"orders"
+							],
+							"query": [
+								{
+									"key": "Auth",
+									"value": "",
+									"disabled": true
+								}
+							]
+						}
+					},
+					"response": []
+				}
+			],
+			"protocolProfileBehavior": {}
+		}
+	],
+	"event": [
+		{
+			"listen": "prerequest",
+			"script": {
+				"id": "b01c0c62-4f80-41c9-866a-f0c0a9a64981",
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		},
+		{
+			"listen": "test",
+			"script": {
+				"id": "d51598b5-83b7-407f-bdc8-59304a02c869",
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		}
+	],
+	"protocolProfileBehavior": {}
+}
