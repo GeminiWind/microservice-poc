@@ -1,36 +1,39 @@
 
 import * as R from 'ramda';
-import { BadRequestError } from 'json-api-error';
+import { BadRequestError, NotImplementedError } from 'json-api-error';
 import { schemaValidator } from '@hai.dinh/service-libraries';
 import schemas from '../../resources/schemas';
 import { password, refreshToken } from './strategies';
-import { PASSWORD_GRANT_TYPE, REFRESH_TOKEN_GRANT_TYPE } from '../../constants';
+import { CLIENT_CREDENTIALS_GRANT_TYPE, REFRESH_TOKEN_GRANT_TYPE } from '../../constants';
 
 export function validateRequest(req) {
-  const validator = schemaValidator.compile(schemas.loginUserSchema);
-  const isValid = validator(req.body);
+  // FIXME: validate request by updating scheme
+  // const validator = schemaValidator.compile(schemas.loginUserSchema);
+  // const isValid = validator(req.body);
 
-  if (!isValid) {
-    console.error('Error in validate request %s', JSON.stringify(validator.errors, null, 2));
+  // if (!isValid) {
+  //   console.error('Error in validate request %s', JSON.stringify(validator.errors, null, 2));
 
-    throw new BadRequestError({
-      source: validator.errors,
-    });
-  }
+  //   throw new BadRequestError({
+  //     source: validator.errors,
+  //   });
+  // }
 
   return req;
 }
 
 export function handleByGrantType(req) {
-  const grantType = R.path(['body', 'data', 'attributes', 'grant_type'], req);
+  const grantType = R.path(['query', 'grant_type'], req);
 
-  if (grantType === PASSWORD_GRANT_TYPE) {
+  if (grantType === CLIENT_CREDENTIALS_GRANT_TYPE) {
     return password(req);
   }
 
   if (grantType === REFRESH_TOKEN_GRANT_TYPE) {
     return refreshToken(req);
   }
+
+  throw new NotImplementedError('Strategy has not been implemented.');
 }
 
 export default R.pipeP(

@@ -6,7 +6,7 @@ import auth from '../func/auth';
 
 const routes = [
   {
-    path: '/tokens',
+    path: '/oauth/token',
     method: 'POST',
     handler: httpHandler(login),
   },
