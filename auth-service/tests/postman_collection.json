@@ -1,7 +1,7 @@
 {
 	"info": {
-		"_postman_id": "5fcfa261-ab05-47be-9b06-67df3a470d66",
-		"name": "Heligram",
+		"_postman_id": "34be9fbc-f7fb-4071-900b-00da6334bee8",
+		"name": "Authentication Service",
 		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
 	},
 	"item": [
@@ -173,6 +173,7 @@
 							"response": []
 						}
 					],
+					"protocolProfileBehavior": {},
 					"_postman_isSubFolder": true
 				},
 				{
@@ -192,12 +193,12 @@
 											"",
 											"pm.test(\"Response is correct\", function () {",
 											"    const response = pm.response.json();",
-											"    pm.expect(response.data.attributes).to.have.property('accessToken');",
-											"    pm.expect(response.data.attributes).to.have.property('expireAt');",
+											"    pm.expect(response.data.attributes).to.have.property('access_token');",
+											"    pm.expect(response.data.attributes).to.have.property('expires_in');",
 											"    ",
 											"    ",
-											"    pm.environment.set(\"token\", response.data.attributes.accessToken);",
-											"    pm.environment.set(\"refreshToken\", response.data.attributes.refreshToken);",
+											"    pm.environment.set(\"access_token\", response.data.attributes.access_token);",
+											"    pm.environment.set(\"refresh_token\", response.data.attributes.refresh_token);",
 											"});",
 											""
 										],
@@ -221,15 +222,22 @@
 								],
 								"body": {
 									"mode": "raw",
-									"raw": "{\n\t\"data\": {\n\t\t\"type\": \"tokens\",\n\t\t\"attributes\": {\n\t\t\t\"grantType\": \"password\",\n\t\t\t\"email\": \"{{email}}\",\n\t\t\t\"password\": \"{{password}}\",\n\t\t\t\"scopes\": \"user:profile create:chat read:chat\"\t\n\t\t}\n\t}\n}"
+									"raw": "{\n\t\"data\": {\n\t\t\"type\": \"tokens\",\n\t\t\"attributes\": {\n\t\t\t\"email\": \"{{email}}\",\n\t\t\t\"password\": \"{{password}}\"\n\t\t}\n\t}\n}"
 								},
 								"url": {
-									"raw": "{{endpoint}}/tokens",
+									"raw": "{{endpoint}}/oauth/token?grant_type=client_credentials",
 									"host": [
 										"{{endpoint}}"
 									],
 									"path": [
-										"tokens"
+										"oauth",
+										"token"
+									],
+									"query": [
+										{
+											"key": "grant_type",
+											"value": "client_credentials"
+										}
 									]
 								}
 							},
@@ -277,15 +285,26 @@
 								],
 								"body": {
 									"mode": "raw",
-									"raw": "{\n\t\"data\": {\n\t\t\"type\": \"tokens\",\n\t\t\"attributes\": {\n\t\t\t\"grantType\": \"refreshToken\",\n\t\t\t\"refreshToken\": \"{{refreshToken}}\"\n\t\t}\n\t}\n}"
+									"raw": ""
 								},
 								"url": {
-									"raw": "{{endpoint}}/tokens",
+									"raw": "{{endpoint}}/oauth/token?grant_type=refresh_token&refresh_token={{refresh_token}}",
 									"host": [
 										"{{endpoint}}"
 									],
 									"path": [
-										"tokens"
+										"oauth",
+										"token"
+									],
+									"query": [
+										{
+											"key": "grant_type",
+											"value": "refresh_token"
+										},
+										{
+											"key": "refresh_token",
+											"value": "{{refresh_token}}"
+										}
 									]
 								}
 							},
@@ -388,21 +407,24 @@
 									"raw": "{\n\t\"data\": {\n\t\t\"type\": \"tokens\",\n\t\t\"attributes\": {\n\t\t\t\"grantType\": \"password\",\n\t\t\t\"email\": \"{{email}}\",\n\t\t\t\"password\": \"invalidPassword\",\n\t\t\t\"scopes\": \"user:profile create:chat read:chat\"\t\n\t\t}\n\t}\n}"
 								},
 								"url": {
-									"raw": "{{endpoint}}/tokens",
+									"raw": "{{endpoint}}/oauth/token",
 									"host": [
 										"{{endpoint}}"
 									],
 									"path": [
-										"tokens"
+										"oauth",
+										"token"
 									]
 								}
 							},
 							"response": []
 						}
 					],
+					"protocolProfileBehavior": {},
 					"_postman_isSubFolder": true
 				}
-			]
+			],
+			"protocolProfileBehavior": {}
 		},
 		{
 			"name": "User",
@@ -420,10 +442,7 @@
 									"});",
 									"",
 									"pm.test(\"Response is correct\", function () {",
-									"    const response = pm.response.json();",
-									"    ",
-									"    pm.expect(response.data.attributes).to.have.property('email');",
-									"    pm.expect(response.data.attributes).to.have.property('scopes');",
+									"     pm.response.to.have.header(\"X-Useremail\");",
 									"});"
 								],
 								"type": "text/javascript"
@@ -448,7 +467,7 @@
 							},
 							{
 								"key": "Authorization",
-								"value": "{{token}}",
+								"value": "Bearer {{access_token}}",
 								"type": "text"
 							}
 						],
@@ -457,18 +476,42 @@
 							"raw": ""
 						},
 						"url": {
-							"raw": "{{endpoint}}/users",
+							"raw": "{{endpoint}}/auth",
 							"host": [
 								"{{endpoint}}"
 							],
 							"path": [
-								"users"
+								"auth"
 							]
 						}
 					},
 					"response": []
 				}
-			]
+			],
+			"protocolProfileBehavior": {}
 		}
-	]
+	],
+	"event": [
+		{
+			"listen": "prerequest",
+			"script": {
+				"id": "3f5d9a81-83c0-4ea6-841c-61eb35950c1c",
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		},
+		{
+			"listen": "test",
+			"script": {
+				"id": "8078ecf4-f349-4fd7-88e8-7be03dc3efb3",
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		}
+	],
+	"protocolProfileBehavior": {}
 }
