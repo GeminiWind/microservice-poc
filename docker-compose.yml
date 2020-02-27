@@ -31,7 +31,7 @@ services:
       DB_PORT: 27017
       DB_NAME: ${DB_NAME:-database}
       DB_MAIN_TABLE: ${DB_MAIN_TABLE:-main}
-      WAIT_HOSTS: database:27017
+      WAIT_HOSTS: database:27017, registry-service:3000
       # DB_ROOT_USERNAME: admin
       # DB_ROOT_PASSWORD: admin
     depends_on:
@@ -44,6 +44,7 @@ services:
       context: ./auth-service
     environment: 
       SECRET_KEY: ${SECRET_KEY:-2mHMHkCw10a1MKlTv8jiP60BFNKhbr8Fy1cIWQlqzAIEPDYIF3}
+      WAIT_HOSTS: storage-service:3001
     depends_on:
       - storage-service
     networks:

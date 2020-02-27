@@ -25,6 +25,7 @@ FROM node:alpine
 
 EXPOSE 3001
 
+RUN apk add --no-cache curl
 ADD https://github.com/ufoscout/docker-compose-wait/releases/download/2.6.0/wait /wait
 RUN chmod +x /wait
 
@@ -32,4 +33,8 @@ WORKDIR /usr/app
 
 COPY --from=builder /usr/app .
 
-CMD /wait && yarn start:prod
+CMD /wait && \
+    curl --location --request POST 'http://registry-service:3000/services' \
+    --header 'Content-Type: application/json' \
+    --data-raw '{"data": {"id": "storage-service","type": "services","attributes": {"name": "storage-service","endpoint": "http://storage-service:3001"}}}' && \
+    yarn start:prod
