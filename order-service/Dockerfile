@@ -1,15 +1,33 @@
-FROM node:8.16.0-alpine
+FROM node as builder
+
+WORKDIR /usr/app
+
+COPY [ \
+    "package.json", \
+    "yarn.lock", \
+    ".babelrc", \
+    "./" \
+    ]
+RUN yarn
+
+COPY scripts scripts
+COPY src src
+
+RUN yarn build && \
+    rm -rf src && \
+    rm -rf scripts && \
+    rm yarn.lock && \
+    rm .babelrc
+
+FROM node:alpine
 
 EXPOSE 3003
 
-WORKDIR /usr/src/app
+ADD https://github.com/ufoscout/docker-compose-wait/releases/download/2.6.0/wait /wait
+RUN chmod +x /wait
 
-COPY package.json .
+WORKDIR /usr/app
 
-RUN npm install -g yarn
+COPY --from=builder /usr/app .
 
-COPY . .
-
-RUN yarn
-
-CMD [ "yarn", "start" ]
+CMD /wait && yarn start:prod

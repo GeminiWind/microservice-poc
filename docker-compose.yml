@@ -53,6 +53,8 @@ services:
     container_name: order-service
     build:
       context: ./order-service
+    environment: 
+      WAIT_HOSTS: auth-service:3002
     networks:
       - microservice
     # DEPENDENCIES
