@@ -145,7 +145,7 @@
 						],
 						"body": {
 							"mode": "raw",
-							"raw": "{\n\t\"data\": {\n\t\t\"type\": \"tokens\",\n\t\t\"attributes\": {\n\t\t\t\"email\": \"haidv@gmail.com\",\n\t\t\t\"password\": \"123456\"\n\t\t}\n\t}\n}"
+							"raw": ""
 						},
 						"url": {
 							"raw": "{{endpoint}}/oauth/token?grant_type=refresh_token&refresh_token={{refresh_token}}",
@@ -182,6 +182,88 @@
 			"name": "order-service",
 			"item": [
 				{
+					"name": "201 Created",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							},
+							{
+								"key": "Authorization",
+								"value": "Bearer {{access_token}}",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n\t\"data\": {\n\t\t\"id\": \"2245f1a8-207d-4d04-8ae2-8679f7d739b4\",\n\t\t\"type\": \"orders\",\n\t\t\"attributes\": {\n\t\t\t\"products\": [\n\t\t\t\t{\n\t\t\t\t\t\"id\": 1,\n\t\t\t\t\t\"price\": 2.5,\n\t\t\t\t\t\"quantity\": 2,\n\t\t\t\t\t\"total\": 5\n\t\t\t\t}\n\t\t\t],\n\t\t\t\"total\": 5,\n\t\t\t\"state\": \"created\",\n\t\t\t\"customer\": {\n\t\t\t\t\"firstName\": \"Hai\",\n\t\t\t\t\"lastName\": \"Dinh\",\n\t\t\t\t\"email\": \"haidv@example.com\",\n\t\t\t\t\"phone\": \"01211222121\"\n\t\t\t},\n\t\t\t\"shippingAddress\": {\n\t\t\t\t\"firstName\": \"Hai\",\n\t\t\t\t\"lastName\": \"Dinh\",\n\t\t\t\t\"countryCode\": \"VN\",\n\t\t\t\t\"street\": \"Gia Lam District\",\n\t\t\t\t\"city\": \"Hanoi\",\n\t\t\t\t\"postcode\": \"100000\"\n\t\t\t},\n\t\t\t\"billingAddress\": {\n\t\t\t\t\"firstName\": \"Hai\",\n\t\t\t\t\"lastName\": \"Dinh\",\n\t\t\t\t\"countryCode\": \"VN\",\n\t\t\t\t\"street\": \"Gia Lam District\",\n\t\t\t\t\"city\": \"Hanoi\",\n\t\t\t\t\"postcode\": \"100000\"\n\t\t\t},\n\t\t\t\"currencyCode\": \"USD\"\n\t\t}\n\t}\n}"
+						},
+						"url": {
+							"raw": "{{endpoint}}/orders",
+							"host": [
+								"{{endpoint}}"
+							],
+							"path": [
+								"orders"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "200 Read",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "6125f798-b6d9-4e1f-a619-7d96d7bb3c94",
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {",
+									"    pm.response.to.have.status(200);",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"type": "text",
+								"value": "Bearer {{access_token}}"
+							},
+							{
+								"key": "Content-Type",
+								"type": "text",
+								"value": "application/vnd.api+json"
+							}
+						],
+						"url": {
+							"raw": "{{endpoint}}/orders/2245f1a8-207d-4d04-8ae2-8679f7d739b4",
+							"host": [
+								"{{endpoint}}"
+							],
+							"path": [
+								"orders",
+								"2245f1a8-207d-4d04-8ae2-8679f7d739b4"
+							],
+							"query": [
+								{
+									"key": "Auth",
+									"value": "",
+									"disabled": true
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
 					"name": "200 List",
 					"event": [
 						{
@@ -207,17 +289,71 @@
 							},
 							{
 								"key": "Content-Type",
-								"value": "application/json",
+								"value": "application/vnd.api+json",
 								"type": "text"
 							}
 						],
 						"url": {
-							"raw": "{{endpoint}}/orders",
+							"raw": "{{endpoint}}/orders?limit=100",
 							"host": [
 								"{{endpoint}}"
 							],
 							"path": [
 								"orders"
+							],
+							"query": [
+								{
+									"key": "Auth",
+									"value": "",
+									"disabled": true
+								},
+								{
+									"key": "limit",
+									"value": "100"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "204 Delete",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "6125f798-b6d9-4e1f-a619-7d96d7bb3c94",
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {",
+									"    pm.response.to.have.status(200);",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "DELETE",
+						"header": [
+							{
+								"key": "Authorization",
+								"type": "text",
+								"value": "Bearer {{access_token}}"
+							},
+							{
+								"key": "Content-Type",
+								"type": "text",
+								"value": "application/vnd.api+json"
+							}
+						],
+						"url": {
+							"raw": "{{endpoint}}/orders/2245f1a8-207d-4d04-8ae2-8679f7d739b4",
+							"host": [
+								"{{endpoint}}"
+							],
+							"path": [
+								"orders",
+								"2245f1a8-207d-4d04-8ae2-8679f7d739b4"
 							],
 							"query": [
 								{
