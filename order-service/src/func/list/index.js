@@ -13,14 +13,11 @@ export async function listOrders(req) {
   try {
     const userEmail = req.headers['x-remote-user'];
 
-    // FIXME: regrex for path does not work correctly. Please fix it
     response = await storageClient.list({
       query: {
-        Path: { $regex: new RegExp(`^users\/${userEmail}\/orders\/*$`) },
-        Type: {
-          $eq: 'orders',
-        },
+        Path: { $regex: `^users/${userEmail}/orders/.*$` },
       },
+      limit: 30,
     });
   } catch (error) {
     instrumentation.error('Error in listing orders', error);
