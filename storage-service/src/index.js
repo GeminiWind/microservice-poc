@@ -10,7 +10,7 @@ import { MAIN_COLLECTION_NAME } from './constants';
 const app = express();
 
 // configure
-app.use(bodyParser.json());
+app.use(bodyParser.json({ type: 'application/vnd.api+json' }));
 
 const port = process.env.PORT || 3001;
 
