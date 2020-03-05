@@ -1,1 +1,1 @@
-{"storage-service":{"name":"storage-service","endpoint":"http://storage-service:3001"},"auth-service":{"name":"auth-service","endpoint":"http://auth-service:3002"}}
+{"storage-service":{"name":"storage-service","endpoint":"http://storage-service:3001"},"auth-service":{"name":"auth-service","endpoint":"http://auth-service:3002"},"order-service":{"name":"order-service","endpoint":"http://order-service:3003"}}
