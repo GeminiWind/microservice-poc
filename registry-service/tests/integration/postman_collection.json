@@ -15,7 +15,7 @@
 						"header": [
 							{
 								"key": "Content-Type",
-								"value": "application/json",
+								"value": "application/vnd.api+json",
 								"type": "text"
 							}
 						],
@@ -42,7 +42,7 @@
 						"header": [
 							{
 								"key": "Content-Type",
-								"value": "application/json",
+								"value": "application/vnd.api+json",
 								"type": "text"
 							}
 						],
@@ -73,7 +73,7 @@
 						"header": [
 							{
 								"key": "Content-Type",
-								"value": "application/json",
+								"value": "application/vnd.api+json",
 								"type": "text"
 							}
 						],
@@ -96,7 +96,7 @@
 						"header": [
 							{
 								"key": "Content-Type",
-								"value": "application/json",
+								"value": "application/vnd.api+json",
 								"type": "text"
 							}
 						],

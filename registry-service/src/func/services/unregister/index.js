@@ -30,6 +30,8 @@ export function returnResponse() {
 }
 
 
-export default event => Promise.resolve(event)
-  .then(unregisterService)
-  .then(returnResponse);
+export default R.pipeP(
+  req => Promise.resolve(req),
+  unregisterService,
+  returnResponse,
+);

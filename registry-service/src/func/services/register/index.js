@@ -52,7 +52,9 @@ export function returnResponse(event) {
 }
 
 
-export default event => Promise.resolve(event)
-  .then(validateRequest)
-  .then(registerService)
-  .then(returnResponse);
+export default R.pipeP(
+  req => Promise.resolve(req),
+  validateRequest,
+  registerService,
+  returnResponse,
+);

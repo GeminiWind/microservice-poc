@@ -42,7 +42,8 @@ export function returnResponse(event) {
   };
 }
 
-
-export default event => Promise.resolve(event)
-  .then(readService)
-  .then(returnResponse);
+export default R.pipeP(
+  req => Promise.resolve(req),
+  readService,
+  returnResponse,
+);
