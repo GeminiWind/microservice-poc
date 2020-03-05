@@ -19,7 +19,7 @@
   "author": "Gemini Wind<gemini.wind285@gmail.com>",
   "license": "MIT",
   "dependencies": {
-    "@hai.dinh/service-libraries": "^0.0.8",
+    "@hai.dinh/service-libraries": "^0.0.9",
     "ajv": "^6.10.0",
     "bcrypt": "^3.0.6",
     "body-parser": "^1.19.0",
