@@ -20,17 +20,18 @@ export async function listingDocuments(event) {
     }, {});
   }
 
-  let query = {};
-  if (R.path(['query', 'query'], event)) {
-    try {
-      // TODO: validate query to prevent injection
-      // Query specification in here:  https://docs.mongodb.com/manual/reference/operator/query/
-      query = JSON.parse(R.path(['query', 'query'], event));
-    } catch (error) {
-      console.log('Error in listing documents', error);
+  let query;
+  try {
+    // TODO: validate query to prevent injection
+    // Query specification in here:  https://docs.mongodb.com/manual/reference/operator/query/
+    query = R.pipe(
+      decodeURIComponent,
+      JSON.parse,
+    )(R.pathOr('%7B%7D', ['query', 'query'], event));
+  } catch (error) {
+    console.log('Error in listing documents', error);
 
-      throw new InternalError('Error in listing documents');
-    }
+    throw new InternalError('Error in listing documents');
   }
 
   const { connector } = event;
@@ -38,9 +39,15 @@ export async function listingDocuments(event) {
   let documents;
   try {
     const collection = connector.collection(MAIN_COLLECTION_NAME);
+    console.log('Listing records with the following condition', JSON.stringify({
+      query,
+      skip: skip && skip > 0 ? skip : 0,
+      limit: limit && limit > 0 ? limit : 100,
+      sort: sort || {},
+    }));
     documents = await collection.find(query, {
       skip: skip && skip > 0 ? skip : 0,
-      limit: limit && limit > 0 ? limit : 0,
+      limit: limit && limit > 0 ? limit : 100,
       sort: sort || {},
     }).toArray();
   } catch (err) {

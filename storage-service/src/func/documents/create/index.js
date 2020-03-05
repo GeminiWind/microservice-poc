@@ -42,9 +42,6 @@ export function returnResponse(event) {
         attributes: R.pick(['Path', 'Content', 'Type', 'Attributes'], documentAttributes),
       },
     },
-    headers: {
-      Accept: 'application/vnd.api+json',
-    },
   };
 }
 
