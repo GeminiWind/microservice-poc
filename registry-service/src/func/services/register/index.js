@@ -13,13 +13,19 @@ export async function registerService(event) {
   const serviceAttributes = R.path(['body', 'data', 'attributes'], event);
 
   try {
-    const currentServices = await fs.readJSON(path.resolve(__dirname, '../../../../services.json'));
+    const servicesFilePath = path.resolve(__dirname, '../../../../services.json');
 
-    // append/update service in list of service
+    const isServiceCatalogExisting = await fs.pathExists(servicesFilePath);
+
+    let currentServices = {};
+    if (isServiceCatalogExisting) {
+      currentServices = await fs.readJSON(servicesFilePath);
+    }
+
     const nextServices = R.merge(currentServices, { [serviceId]: serviceAttributes });
 
     // write to services.json file
-    await fs.writeJson(path.resolve(__dirname, '../../../../services.json'), nextServices);
+    await fs.writeJson(servicesFilePath, nextServices);
   } catch (err) {
     console.log('Error in registering service', err);
 
