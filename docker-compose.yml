@@ -45,8 +45,6 @@ services:
     environment: 
       SECRET_KEY: ${SECRET_KEY:-2mHMHkCw10a1MKlTv8jiP60BFNKhbr8Fy1cIWQlqzAIEPDYIF3}
       WAIT_HOSTS: storage-service:3001
-    depends_on:
-      - storage-service
     networks:
       - microservice
   order-service:
