@@ -31,6 +31,11 @@
 								"key": "Content-Type",
 								"value": "application/vnd.api+json",
 								"type": "text"
+							},
+							{
+								"key": "Accept",
+								"value": "application/vnd.api+json",
+								"type": "text"
 							}
 						],
 						"body": {
@@ -78,6 +83,11 @@
 						"header": [
 							{
 								"key": "Content-Type",
+								"value": "application/vnd.api+json",
+								"type": "text"
+							},
+							{
+								"key": "Accept",
 								"value": "application/vnd.api+json",
 								"type": "text"
 							}
@@ -139,8 +149,13 @@
 						"header": [
 							{
 								"key": "Content-Type",
-								"type": "text",
-								"value": "application/vnd.api+json"
+								"value": "application/vnd.api+json",
+								"type": "text"
+							},
+							{
+								"key": "Accept",
+								"value": "application/vnd.api+json",
+								"type": "text"
 							}
 						],
 						"body": {
@@ -188,7 +203,12 @@
 						"header": [
 							{
 								"key": "Content-Type",
-								"value": "application/json",
+								"value": "application/vnd.api+json",
+								"type": "text"
+							},
+							{
+								"key": "Accept",
+								"value": "application/vnd.api+json",
 								"type": "text"
 							},
 							{
@@ -234,13 +254,18 @@
 						"header": [
 							{
 								"key": "Authorization",
-								"type": "text",
-								"value": "Bearer {{access_token}}"
+								"value": "Bearer {{access_token}}",
+								"type": "text"
 							},
 							{
 								"key": "Content-Type",
-								"type": "text",
-								"value": "application/vnd.api+json"
+								"value": "application/vnd.api+json",
+								"type": "text"
+							},
+							{
+								"key": "Accept",
+								"value": "application/vnd.api+json",
+								"type": "text"
 							}
 						],
 						"url": {
@@ -291,6 +316,11 @@
 								"key": "Content-Type",
 								"value": "application/vnd.api+json",
 								"type": "text"
+							},
+							{
+								"key": "Accept",
+								"value": "application/vnd.api+json",
+								"type": "text"
 							}
 						],
 						"url": {
@@ -337,13 +367,18 @@
 						"header": [
 							{
 								"key": "Authorization",
-								"type": "text",
-								"value": "Bearer {{access_token}}"
+								"value": "Bearer {{access_token}}",
+								"type": "text"
 							},
 							{
 								"key": "Content-Type",
-								"type": "text",
-								"value": "application/vnd.api+json"
+								"value": "application/vnd.api+json",
+								"type": "text"
+							},
+							{
+								"key": "Accept",
+								"value": "application/vnd.api+json",
+								"type": "text"
 							}
 						],
 						"url": {
