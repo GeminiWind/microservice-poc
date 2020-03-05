@@ -3,17 +3,17 @@ import * as func from '../func';
 
 const routes = [
   {
-    path: '/',
+    path: '/orders',
     method: 'POST',
     handler: httpHandler(func.create),
   },
   {
-    path: '/:id',
+    path: '/orders/:id',
     method: 'GET',
     handler: httpHandler(func.read),
   },
   {
-    path: '/',
+    path: '/orders',
     method: 'GET',
     handler: httpHandler(func.list),
   },
@@ -23,7 +23,7 @@ const routes = [
   //   handler: httpHandler(func.update),
   // },
   {
-    path: '/:id',
+    path: '/orders/:id',
     method: 'DELETE',
     handler: httpHandler(func.remove),
   },
