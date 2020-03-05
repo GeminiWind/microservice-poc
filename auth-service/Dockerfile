@@ -26,8 +26,14 @@ EXPOSE 3002
 ADD https://github.com/ufoscout/docker-compose-wait/releases/download/2.6.0/wait /wait
 RUN chmod +x /wait
 
+RUN apk add --no-cache curl
+
 WORKDIR /usr/app
 
 COPY --from=builder /usr/app .
 
-CMD /wait && yarn start:prod
+CMD /wait && \
+    curl --location --request POST 'http://registry-service:3000/services' \
+    --header 'Content-Type: application/json' \
+    --data-raw '{"data": {"id": "auth-service","type": "services","attributes": {"name": "auth-service","endpoint": "http://auth-service:3002"}}}' && \
+    yarn start:prod

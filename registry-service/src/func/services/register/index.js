@@ -13,7 +13,7 @@ export async function registerService(event) {
   const serviceAttributes = R.path(['body', 'data', 'attributes'], event);
 
   try {
-    const currentServices = fs.readJSON(path.resolve(__dirname, '../../../../services.json'));
+    const currentServices = await fs.readJSON(path.resolve(__dirname, '../../../../services.json'));
 
     // append/update service in list of service
     const nextServices = R.merge(currentServices, { [serviceId]: serviceAttributes });
