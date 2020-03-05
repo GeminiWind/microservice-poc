@@ -34,6 +34,6 @@ COPY --from=builder /usr/app .
 
 CMD /wait && \
     curl --location --request POST 'http://registry-service:3000/services' \
-    --header 'Content-Type: application/json' \
+    --header 'Content-Type: application/vnd.api+json' \
     --data-raw '{"data": {"id": "auth-service","type": "services","attributes": {"name": "auth-service","endpoint": "http://auth-service:3002"}}}' && \
     yarn start:prod
