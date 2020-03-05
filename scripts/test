@@ -1,0 +1,33 @@
+#!/bin/bash
+
+# running docker-compose
+docker-compose up -d
+
+# check localhost is up
+
+function test_api {
+  yarn test 
+}
+
+function retry {
+  n=0
+  until [ $n -ge 5 ]
+    do
+      if [ $(curl -sL -w "%{http_code}\\n" "http://localhost/nginx-health" -o /dev/null --connect-timeout 30) == "200" ] ; 
+      then
+        sleep 15
+        echo "Environment has ready to test. Executing test ..."
+        test_api
+        break ;
+      else
+        echo "Environment has not yet ready to test"
+      n=$[$n+1]
+      sleep 15
+      fi
+    done
+  docker-compose down
+}
+
+retry
+
+# run yarn newman

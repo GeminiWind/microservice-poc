@@ -198,6 +198,20 @@
 			"item": [
 				{
 					"name": "201 Created",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "aced9fd6-8ff9-4a02-8893-358a7b364062",
+								"exec": [
+									"pm.test(\"Status code is 201\", function () {",
+									"    pm.response.to.have.status(201);",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
 					"request": {
 						"method": "POST",
 						"header": [
@@ -219,7 +233,7 @@
 						],
 						"body": {
 							"mode": "raw",
-							"raw": "{\n\t\"data\": {\n\t\t\"id\": \"2245f1a8-207d-4d04-8ae2-8679f7d739b4\",\n\t\t\"type\": \"orders\",\n\t\t\"attributes\": {\n\t\t\t\"products\": [\n\t\t\t\t{\n\t\t\t\t\t\"id\": 1,\n\t\t\t\t\t\"price\": 2.5,\n\t\t\t\t\t\"quantity\": 2,\n\t\t\t\t\t\"total\": 5\n\t\t\t\t}\n\t\t\t],\n\t\t\t\"total\": 5,\n\t\t\t\"state\": \"created\",\n\t\t\t\"customer\": {\n\t\t\t\t\"firstName\": \"Hai\",\n\t\t\t\t\"lastName\": \"Dinh\",\n\t\t\t\t\"email\": \"haidv@example.com\",\n\t\t\t\t\"phone\": \"01211222121\"\n\t\t\t},\n\t\t\t\"shippingAddress\": {\n\t\t\t\t\"firstName\": \"Hai\",\n\t\t\t\t\"lastName\": \"Dinh\",\n\t\t\t\t\"countryCode\": \"VN\",\n\t\t\t\t\"street\": \"Gia Lam District\",\n\t\t\t\t\"city\": \"Hanoi\",\n\t\t\t\t\"postcode\": \"100000\"\n\t\t\t},\n\t\t\t\"billingAddress\": {\n\t\t\t\t\"firstName\": \"Hai\",\n\t\t\t\t\"lastName\": \"Dinh\",\n\t\t\t\t\"countryCode\": \"VN\",\n\t\t\t\t\"street\": \"Gia Lam District\",\n\t\t\t\t\"city\": \"Hanoi\",\n\t\t\t\t\"postcode\": \"100000\"\n\t\t\t},\n\t\t\t\"currencyCode\": \"USD\"\n\t\t}\n\t}\n}"
+							"raw": "{\n\t\"data\": {\n\t\t\"id\": \"2245f1a8-207d-4d04-8ae2-8679f7d739b4\",\n\t\t\"type\": \"orders\",\n\t\t\"attributes\": {\n\t\t\t\"products\": [\n\t\t\t\t{\n\t\t\t\t\t\"id\": \"A1\",\n\t\t\t\t\t\"price\": 2.5,\n\t\t\t\t\t\"quantity\": 2,\n\t\t\t\t\t\"total\": 5\n\t\t\t\t}\n\t\t\t],\n\t\t\t\"total\": 5,\n\t\t\t\"state\": \"created\",\n\t\t\t\"customer\": {\n\t\t\t\t\"firstName\": \"Hai\",\n\t\t\t\t\"lastName\": \"Dinh\",\n\t\t\t\t\"email\": \"haidv@example.com\",\n\t\t\t\t\"phone\": \"01211222121\"\n\t\t\t},\n\t\t\t\"shippingAddress\": {\n\t\t\t\t\"firstName\": \"Hai\",\n\t\t\t\t\"lastName\": \"Dinh\",\n\t\t\t\t\"countryCode\": \"VN\",\n\t\t\t\t\"street\": \"Gia Lam District\",\n\t\t\t\t\"city\": \"Hanoi\",\n\t\t\t\t\"postcode\": \"100000\"\n\t\t\t},\n\t\t\t\"billingAddress\": {\n\t\t\t\t\"firstName\": \"Hai\",\n\t\t\t\t\"lastName\": \"Dinh\",\n\t\t\t\t\"countryCode\": \"VN\",\n\t\t\t\t\"street\": \"Gia Lam District\",\n\t\t\t\t\"city\": \"Hanoi\",\n\t\t\t\t\"postcode\": \"100000\"\n\t\t\t},\n\t\t\t\"currencyCode\": \"USD\"\n\t\t}\n\t}\n}"
 						},
 						"url": {
 							"raw": "{{endpoint}}/orders",
@@ -354,8 +368,8 @@
 							"script": {
 								"id": "6125f798-b6d9-4e1f-a619-7d96d7bb3c94",
 								"exec": [
-									"pm.test(\"Status code is 200\", function () {",
-									"    pm.response.to.have.status(200);",
+									"pm.test(\"Status code is 204\", function () {",
+									"    pm.response.to.have.status(204);",
 									"});"
 								],
 								"type": "text/javascript"

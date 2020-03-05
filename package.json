@@ -1,0 +1,25 @@
+{
+  "name": "microservice-poc",
+  "version": "1.0.0",
+  "description": "This is prove of concept for microservice, which is written in NodeJS",
+  "dependencies": {
+    "newman": "^4.6.0"
+  },
+  "devDependencies": {},
+  "scripts": {
+    "test": "newman run tests/postman_collection.json -e tests/postman_environment.json"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://GeminiWind:cb98bbb694f96c09a94a7fb9edd36b0e43741563@github.com/GeminiWind/microservice-poc.git"
+  },
+  "keywords": [
+    "microservice-poc"
+  ],
+  "author": "Gemini Wind",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/GeminiWind/microservice-poc/issues"
+  },
+  "homepage": "https://github.com/GeminiWind/microservice-poc#readme"
+}

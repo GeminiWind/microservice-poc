@@ -10,7 +10,7 @@
     "test": "yarn jest",
     "test:integration": "yarn newman",
     "lint": "yarn eslint src/*",
-    "build": "./scripts/build"
+    "build": "chmod +x ./scripts/build && ./scripts/build"
   },
   "keywords": [
     "microservice",
