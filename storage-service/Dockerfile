@@ -4,6 +4,7 @@ WORKDIR /usr/app
 
 COPY [ \
     "package.json", \
+    "ecosystem.config.yml", \
     "yarn.lock", \
     ".babelrc", \
     "./" \
@@ -25,7 +26,9 @@ FROM node:alpine
 
 EXPOSE 3001
 
-RUN apk add --no-cache curl
+RUN apk add --no-cache curl && \
+    npm install -g pm2
+
 ADD https://github.com/ufoscout/docker-compose-wait/releases/download/2.6.0/wait /wait
 RUN chmod +x /wait
 
@@ -37,4 +40,4 @@ CMD /wait && \
     curl --location --request POST 'http://registry-service:3000/services' \
     --header 'Content-Type: application/vnd.api+json' \
     --data-raw '{"data": {"id": "storage-service","type": "services","attributes": {"name": "storage-service","endpoint": "http://storage-service:3001"}}}' && \
-    yarn start:prod
+    pm2-runtime ecosystem.config.yml

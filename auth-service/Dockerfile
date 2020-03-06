@@ -4,6 +4,7 @@ WORKDIR /usr/app
 
 COPY [ \
     "package.json", \
+    "ecosystem.config.yml", \
     "yarn.lock", \
     ".babelrc", \
     "./" \
@@ -26,7 +27,8 @@ EXPOSE 3002
 ADD https://github.com/ufoscout/docker-compose-wait/releases/download/2.6.0/wait /wait
 RUN chmod +x /wait
 
-RUN apk add --no-cache curl
+RUN apk add --no-cache curl && \
+    npm install -g pm2
 
 WORKDIR /usr/app
 
@@ -36,4 +38,4 @@ CMD /wait && \
     curl --location --request POST 'http://registry-service:3000/services' \
     --header 'Content-Type: application/vnd.api+json' \
     --data-raw '{"data": {"id": "auth-service","type": "services","attributes": {"name": "auth-service","endpoint": "http://auth-service:3002"}}}' && \
-    yarn start:prod
+    pm2-runtime ecosystem.config.yml

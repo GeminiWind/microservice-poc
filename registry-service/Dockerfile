@@ -6,6 +6,7 @@ COPY [ \
     "package.json", \
     "yarn.lock", \
     ".babelrc", \
+    "ecosystem.config.yml", \
     "./" \
     ]
 
@@ -27,6 +28,8 @@ EXPOSE 3000
 
 WORKDIR /usr/app
 
+RUN npm install -g pm2
+
 COPY --from=builder /usr/app .
 
-CMD yarn start:prod
+CMD pm2-runtime ecosystem.config.yml
