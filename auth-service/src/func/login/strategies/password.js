@@ -1,5 +1,7 @@
 import * as R from 'ramda';
-import { NotFoundError, BadRequestError } from 'json-api-error';
+import moment from 'moment';
+import { NotFoundError, BadRequestError, InternalError } from 'json-api-error';
+import crypto from 'crypto';
 import path from 'path';
 import { readFile } from '../../../lib';
 import { generateToken, isMatchingWithHashedPassword } from '../helpers';
@@ -48,6 +50,7 @@ export function verifyPassword(req) {
 export async function generateTokens(req) {
   const {
     user,
+    storageClient,
   } = req;
 
   const privateKey = readFile(path.resolve(__dirname, '../../../../auth_service_rsa'));
@@ -67,15 +70,27 @@ export async function generateTokens(req) {
 
   // refresh token should only contain authorization
   // and live longer than access token
-  const refreshToken = generateToken(
-    {
-      email: user.email,
-    },
-    process.env.SECRET_KEY,
-    {
-      expiresIn: `${EXPIRY_REFRESH_TOKEN}m`,
-    },
-  );
+  let refreshToken;
+  try {
+    refreshToken = crypto.randomBytes(64).toString('hex');
+    // create TTL record for refresh token
+    await storageClient.create(`refresh-tokens/${refreshToken}`, {
+      Attributes: {
+        expiredAt: moment().add(EXPIRY_REFRESH_TOKEN, 'm').toDate(),
+      },
+      Content: {
+        user: {
+          email: user.email,
+        },
+        isEnable: 'true',
+      },
+      Type: 'refresh-tokens',
+    });
+  } catch (error) {
+    console.log('Error in generating refresh token', error);
+
+    throw new InternalError('Error in generating tokens');
+  }
 
   return {
     ...req,
