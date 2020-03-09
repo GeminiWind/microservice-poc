@@ -1,12 +1,17 @@
 import { Strategy as JwtStrategy, ExtractJwt } from 'passport-jwt';
 import { StorageClient } from '@hai.dinh/service-libraries';
+import path from 'path';
+import readFile from './readFile';
 
 const storageClient = new StorageClient();
 
-export default function jwtPassport(passport) {
+export default async function jwtPassport(passport) {
+  const publicKey = readFile(path.resolve(__dirname, '../../auth_service_rsa.pub'));
+
   const options = {
+    algorithm: ['RS256'],
     jwtFromRequest: ExtractJwt.fromAuthHeaderAsBearerToken(),
-    secretOrKey: process.env.SECRET_KEY,
+    secretOrKey: publicKey,
   };
 
   passport.use(new JwtStrategy(options, async (jwtPayload, done) => {

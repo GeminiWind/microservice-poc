@@ -1,18 +1,31 @@
-import jwt from 'jsonwebtoken';
 import * as R from 'ramda';
-import { NotFoundError } from 'json-api-error';
+import { NotFoundError, BadRequestError, InternalError } from 'json-api-error';
+import path from 'path';
+import { readFile } from '../../../lib';
 import { generateToken } from '../helpers';
 import { EXPIRY_ACCESS_TOKEN } from '../../../constants';
 
-export function extractRefreshToken(req) {
+export async function extractRefreshToken(req) {
   const refreshToken = R.path(['query', 'refresh_token'], req);
+  const { storageClient, instrumentation } = req;
 
-  const decoded = jwt.verify(refreshToken, process.env.SECRET_KEY);
-  const email = R.path(['email'], decoded);
+  let response;
+
+  try {
+    response = await storageClient.get(`refresh-tokens/${refreshToken}`);
+  } catch (error) {
+    instrumentation.error(`Error in getting refreshToken "${refreshToken}".`, error);
+
+    throw new InternalError('Error in handling refresh token');
+  }
+
+  if (response.statusCode === 404) {
+    throw new BadRequestError(`Refresh token ${refreshToken} was invalid`);
+  }
 
   return Promise.resolve({
     ...req,
-    email,
+    email: response.body.Content.user.email,
     refreshToken,
   });
 }
@@ -44,15 +57,18 @@ export async function generateTokens(req) {
     refreshToken,
   } = req;
 
+  const privateKey = readFile(path.resolve(__dirname, '../../../../auth_service_rsa'));
+
   // access token should contain both authorization and authentication
   const accessToken = generateToken(
     {
       email: user.email,
       sub: user.email,
     },
-    process.env.SECRET_KEY,
+    privateKey,
     {
       expiresIn: `${EXPIRY_ACCESS_TOKEN}m`,
+      algorithm: 'RS256',
     },
   );
 
