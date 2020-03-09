@@ -27,10 +27,15 @@ EXPOSE 3002
 ADD https://github.com/ufoscout/docker-compose-wait/releases/download/2.6.0/wait /wait
 RUN chmod +x /wait
 
-RUN apk add --no-cache curl && \
+RUN apk add --no-cache curl\
+    openssl \
+    openssh-client && \
     npm install -g pm2
 
 WORKDIR /usr/app
+
+RUN ssh-keygen -t rsa -b 4096 -m PEM -f auth_service_rsa && \
+    openssl rsa -in auth_service_rsa -pubout -outform PEM -out auth_service_rsa.pub
 
 COPY --from=builder /usr/app .
 

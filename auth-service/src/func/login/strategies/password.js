@@ -1,5 +1,7 @@
 import * as R from 'ramda';
 import { NotFoundError, BadRequestError } from 'json-api-error';
+import path from 'path';
+import { readFile } from '../../../lib';
 import { generateToken, isMatchingWithHashedPassword } from '../helpers';
 import { EXPIRY_ACCESS_TOKEN, EXPIRY_REFRESH_TOKEN } from '../../../constants';
 
@@ -48,15 +50,18 @@ export async function generateTokens(req) {
     user,
   } = req;
 
+  const privateKey = readFile(path.resolve(__dirname, '../../../../auth_service_rsa'));
+
   // access token should contain both authorization and authentication
   const accessToken = generateToken(
     {
       email: user.email,
       sub: user.email,
     },
-    process.env.SECRET_KEY,
+    privateKey,
     {
       expiresIn: `${EXPIRY_ACCESS_TOKEN}m`,
+      algorithm: 'RS256',
     },
   );
 
