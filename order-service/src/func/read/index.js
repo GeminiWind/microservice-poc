@@ -10,13 +10,11 @@ export async function getOrder(req) {
     },
   } = req;
 
+  const path = `users/${req.headers['x-remote-user']}/orders/${id}`;
 
   let response;
 
   try {
-    const userEmail = req.headers['x-remote-user'];
-    const path = `users/${userEmail}/orders/${id}`;
-
     response = await storageClient.get(path);
   } catch (error) {
     instrumentation.error(`Error in getting order "${id}".`, error);
@@ -25,7 +23,7 @@ export async function getOrder(req) {
   }
 
   if (response.statusCode === 404) {
-    throw new NotFoundError(`Order ${id} was not found`);
+    throw new NotFoundError(`Order ${id} was not found.`);
   }
 
   return {
