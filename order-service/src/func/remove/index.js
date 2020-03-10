@@ -5,27 +5,24 @@ export async function checkExistingOrder(req) {
   const {
     instrumentation,
     storageClient,
-    params: {
-      id,
-    },
   } = req;
 
+  const userEmail = req.headers['x-remote-user'];
+  const orderId = R.path(['params', 'id'], req);
+  const path = `users/${userEmail}/orders/${orderId}`;
 
   let response;
 
   try {
-    const userEmail = req.headers['x-remote-user'];
-    const path = `users/${userEmail}/orders/${id}`;
-
     response = await storageClient.get(path);
   } catch (error) {
-    instrumentation.error(`Error in getting order "${id}".`, error);
+    instrumentation.error(`Error in getting order "${orderId}".`, error);
 
-    throw new InternalError(`Error in getting order "${id}".`);
+    throw new InternalError(`Error in getting order "${orderId}".`);
   }
 
   if (response.statusCode === 404) {
-    throw new NotFoundError(`Order ${id} was not found`);
+    throw new NotFoundError(`Order ${orderId} was not found`);
   }
 
   return req;
@@ -35,23 +32,19 @@ export async function deleteOrder(req) {
   const {
     instrumentation,
     storageClient,
-    params: {
-      id,
-    },
   } = req;
 
+  const userEmail = req.headers['x-remote-user'];
+  const orderId = R.path(['params', 'id'], req);
+  const path = `users/${userEmail}/orders/${orderId}`;
 
   try {
-    const userEmail = req.headers['x-remote-user'];
-    const path = `users/${userEmail}/orders/${id}`;
-
     await storageClient.delete(path);
   } catch (error) {
-    instrumentation.error(`Error in deleting order "${id}".`, error);
+    instrumentation.error(`Error in deleting order "${orderId}".`, error);
 
-    throw new InternalError(`Error in deleting order "${id}".`);
+    throw new InternalError(`Error in deleting order "${orderId}".`);
   }
-
 
   return req;
 }
