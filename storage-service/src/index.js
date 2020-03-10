@@ -1,6 +1,7 @@
 import express from 'express';
 import bodyParser from 'body-parser';
 import { InternalError } from 'json-api-error';
+import promMid from 'express-prometheus-middleware';
 import { jsonApiErrorHandler } from 'json-api-error/middlewares';
 import { MongoClient } from 'mongodb';
 import routes from './routes';
@@ -8,6 +9,12 @@ import initMainCollection from './tasks/initMainCollection';
 import { MAIN_COLLECTION_NAME } from './constants';
 
 const app = express();
+
+app.use(promMid({
+  metricsPath: '/metrics',
+  collectDefaultMetrics: true,
+  requestDurationBuckets: [0.1, 0.5, 1, 1.5],
+}));
 
 // configure
 app.use(bodyParser.json({ type: 'application/vnd.api+json' }));
