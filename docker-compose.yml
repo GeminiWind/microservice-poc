@@ -118,6 +118,54 @@ services:
         - "3000:3000"
     networks:
       - microservice
+  # LOGGING
+  elasticsearch:
+    build:
+      context: ./logging/elasticsearch/
+      args:
+        ELK_VERSION: $ELK_VERSION
+    volumes:
+      - ./logging/elasticsearch/config/elasticsearch.yml:/usr/share/elasticsearch/config/elasticsearch.yml
+    ports:
+      - "9200:9200"
+      - "9300:9300"
+    environment:
+      ES_JAVA_OPTS: "-Xmx256m -Xms256m"
+      ELASTIC_PASSWORD: admin
+    networks:
+      - microservice
+  logstash:
+    build:
+      context: ./logging/logstash/
+      args:
+        ELK_VERSION: $ELK_VERSION
+    volumes:
+      - ./logging/logstash/config/logstash.yml:/usr/share/logstash/config/logstash.yml
+      - ./logging/logstash/pipeline:/usr/share/logstash/pipeline
+    ports:
+      - "5000:5000"
+      - "9600:9600"
+    expose: 
+      - "5044"
+    environment:
+      LS_JAVA_OPTS: "-Xmx256m -Xms256m"
+    networks:
+      - microservice
+    depends_on:
+      - elasticsearch
+  kibana:
+    build:
+      context: ./logging/kibana/
+      args:
+        ELK_VERSION: $ELK_VERSION
+    volumes:
+      - ./logging/kibana/config/kibana.yml:/usr/share/kibana/config/kibana.yml
+    ports:
+      - "5601:5601"
+    networks:
+      - microservice
+    depends_on:
+      - elasticsearch
   # DEPENDENCIES
   database:
     image: mongo:latest
@@ -130,6 +178,7 @@ services:
 volumes:
   prometheus_data: {}
   grafana_data: {}
+  elasticsearch:
 
 networks:
   microservice:
