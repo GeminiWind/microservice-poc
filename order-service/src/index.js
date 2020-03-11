@@ -1,5 +1,6 @@
 import express from 'express';
 import bodyParser from 'body-parser';
+import promMid from 'express-prometheus-middleware';
 import { jsonApiErrorHandler } from 'json-api-error/middlewares';
 import { useStorage } from '@hai.dinh/service-libraries/middlewares';
 import { logger } from './lib';
@@ -9,6 +10,12 @@ import routes from './routes';
 const port = process.env.PORT || 3003;
 
 const app = express();
+
+app.use(promMid({
+  metricsPath: '/metrics',
+  collectDefaultMetrics: true,
+  requestDurationBuckets: [0.1, 0.5, 1, 1.5],
+}));
 
 app.use(bodyParser.json({ type: 'application/vnd.api+json' }));
 app.use(useStorage);
