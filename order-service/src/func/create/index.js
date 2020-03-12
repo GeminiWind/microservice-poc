@@ -4,11 +4,13 @@ import { schemaValidator } from '@hai.dinh/service-libraries';
 import schemas from '../../resources/schemas';
 
 export function validateRequest(req) {
+  const { instrumentation } = req;
+
   const validator = schemaValidator.compile(schemas.createOrderSchema);
   const isValid = validator(req.body);
 
   if (!isValid) {
-    console.error('Request is invalid', JSON.stringify(validator.errors, null, 2));
+    instrumentation.error('Request is invalid', JSON.stringify(validator.errors, null, 2));
 
     throw new BadRequestError({
       detail: 'Request is invalid',
@@ -44,9 +46,9 @@ export async function createOrder(req) {
 
     await storageClient.create(path, record);
   } catch (error) {
-    instrumentation.error(`Error in creating new order ${id}.`, error);
+    instrumentation.error(`Error in creating order ${id}.`, error);
 
-    throw new InternalError(`Error in creating new order ${id}.`);
+    throw new InternalError(`Error in creating order ${id}.`);
   }
 
   return req;

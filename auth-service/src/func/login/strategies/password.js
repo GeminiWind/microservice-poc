@@ -35,11 +35,13 @@ export async function getUserByEmail(req) {
 }
 
 export function verifyPassword(req) {
+  const { instrumentation } = req;
+
   const plainPassword = R.path(['body', 'data', 'attributes', 'password'], req);
   const hashedPassword = R.path(['user', 'password'], req);
 
   if (!isMatchingWithHashedPassword(plainPassword, hashedPassword)) {
-    console.error('Password does not match');
+    instrumentation.error('Password does not match');
 
     throw new BadRequestError('Your account does not exist or invalid.');
   }
@@ -51,6 +53,7 @@ export async function generateTokens(req) {
   const {
     user,
     storageClient,
+    instrumentation,
   } = req;
 
   const privateKey = readFile(path.resolve(__dirname, '../../../../auth_service_rsa'));
@@ -87,7 +90,7 @@ export async function generateTokens(req) {
       Type: 'refresh-tokens',
     });
   } catch (error) {
-    console.log('Error in generating refresh token', error);
+    instrumentation.error('Error in generating refresh token', error);
 
     throw new InternalError('Error in generating tokens');
   }

@@ -3,6 +3,8 @@ import * as R from 'ramda';
 import { MAIN_COLLECTION_NAME } from '../../../constants';
 
 export async function listingDocuments(event) {
+  const { instrumentation, connector } = event;
+
   const skip = parseInt(R.path(['query', 'skip'], event), 10);
   const limit = parseInt(R.path(['query', 'limit'], event), 10);
 
@@ -29,17 +31,15 @@ export async function listingDocuments(event) {
       JSON.parse,
     )(R.pathOr('%7B%7D', ['query', 'query'], event));
   } catch (error) {
-    console.log('Error in listing documents', error);
+    instrumentation.error('Error in parsing query', error);
 
-    throw new InternalError('Error in listing documents');
+    throw new InternalError('Error in parsing query');
   }
-
-  const { connector } = event;
 
   let documents;
   try {
     const collection = connector.collection(MAIN_COLLECTION_NAME);
-    console.log('Listing records with the following condition', JSON.stringify({
+    instrumentation.info('Listing records with the following condition', JSON.stringify({
       query,
       skip: skip && skip > 0 ? skip : 0,
       limit: limit && limit > 0 ? limit : 100,
@@ -51,7 +51,7 @@ export async function listingDocuments(event) {
       sort: sort || {},
     }).toArray();
   } catch (err) {
-    console.log('Error in listing documents', err);
+    instrumentation.error('Error in listing documents', err);
 
     throw new InternalError('Error in listing documents');
   }

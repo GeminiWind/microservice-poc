@@ -9,6 +9,7 @@ export async function validateRequest(event) {
 }
 
 export async function registerService(event) {
+  const { instrumentation } = event;
   const serviceId = R.path(['body', 'data', 'id'], event);
   const serviceAttributes = R.path(['body', 'data', 'attributes'], event);
 
@@ -22,12 +23,13 @@ export async function registerService(event) {
       currentServices = await fs.readJSON(servicesFilePath);
     }
 
+    instrumentation.info(`Registering/Updating ${serviceId} with the following information ${JSON.stringify(serviceAttributes)}...`);
     const nextServices = R.merge(currentServices, { [serviceId]: serviceAttributes });
 
     // write to services.json file
     await fs.writeJson(servicesFilePath, nextServices);
   } catch (err) {
-    console.log('Error in registering service', err);
+    instrumentation.error('Error in registering service', err);
 
     throw new InternalError('Error in registering service. Please try again.');
   }

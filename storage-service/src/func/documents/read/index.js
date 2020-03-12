@@ -4,7 +4,7 @@ import { MAIN_COLLECTION_NAME } from '../../../constants';
 
 export async function getDocument(event) {
   const path = R.path(['params', 'path'], event);
-  const { connector } = event;
+  const { connector, instrumentation } = event;
 
   let doc;
 
@@ -15,13 +15,13 @@ export async function getDocument(event) {
       Path: path,
     });
   } catch (error) {
-    console.log('Error in getting document', error);
+    instrumentation.error(`Error in getting document with Path:"${path}"`, error);
 
     throw new InternalError('Error in getting document. Try again');
   }
 
   if (!doc) {
-    console.log(`Document with Path:${path} was not found.`);
+    instrumentation.error(`Document with Path:${path} was not found.`);
 
     throw new NotFoundError(`Document with Path:${path} was not found.`);
   }

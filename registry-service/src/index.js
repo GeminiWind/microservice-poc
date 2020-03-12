@@ -1,8 +1,11 @@
 import express from 'express';
 import bodyParser from 'body-parser';
 import promMid from 'express-prometheus-middleware';
+import { useInstrumentation } from '@hai.dinh/service-libraries/middlewares';
 import { jsonApiErrorHandler } from 'json-api-error/middlewares';
 import routes from './routes';
+
+const port = process.env.PORT || 3000;
 
 const app = express();
 
@@ -14,8 +17,7 @@ app.use(promMid({
 
 // configure
 app.use(bodyParser.json({ type: 'application/vnd.api+json' }));
-
-const port = process.env.PORT || 3000;
+app.use(useInstrumentation);
 
 // TODO: intialize route
 routes.map((route) => {
