@@ -1,0 +1,10 @@
+filebeat.inputs:
+- type: log
+  enabled: true
+  paths:
+    - /var/log/microservice_poc/**/*.log
+
+output.logstash:
+  enabled: true
+  hosts: ["logstash:5044"]
+ 

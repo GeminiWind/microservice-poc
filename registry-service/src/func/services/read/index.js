@@ -5,6 +5,7 @@ import * as R from 'ramda';
 
 export async function readService(event) {
   const serviceId = R.path(['params', 'serviceId'], event);
+  const { instrumentation } = event;
 
   let service;
   try {
@@ -12,13 +13,15 @@ export async function readService(event) {
 
     service = R.path([serviceId], services);
   } catch (err) {
-    console.log('Error in getting service', err);
+    instrumentation.error('Error in getting service', err);
 
     throw new InternalError('Error in getting service. Please try again.');
   }
 
   if (!service) {
-    throw new NotFoundError('Your service was not found.');
+    instrumentation.error(`${serviceId} was not found.`);
+
+    throw new NotFoundError(`${serviceId} was not found.`);
   }
 
   return {

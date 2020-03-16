@@ -20,6 +20,7 @@ services:
       context: ./registry-service
     volumes: 
       - ./registry-service/services.json:/usr/app/services.json
+      - registry_log:/usr/app/log
     networks:
       - microservice
   storage-service:
@@ -34,8 +35,8 @@ services:
       WAIT_HOSTS: database:27017, registry-service:3000
       # DB_ROOT_USERNAME: admin
       # DB_ROOT_PASSWORD: admin
-    depends_on:
-      - database
+    volumes: 
+      - storage_log:/usr/app/log
     networks:
       - microservice
   auth-service:
@@ -45,6 +46,8 @@ services:
     environment: 
       SECRET_KEY: ${SECRET_KEY:-2mHMHkCw10a1MKlTv8jiP60BFNKhbr8Fy1cIWQlqzAIEPDYIF3}
       WAIT_HOSTS: storage-service:3001
+    volumes: 
+      - auth_log:/usr/app/log
     networks:
       - microservice
   order-service:
@@ -53,6 +56,8 @@ services:
       context: ./order-service
     environment: 
       WAIT_HOSTS: auth-service:3002
+    volumes:
+      - order_log:/usr/app/log
     networks:
       - microservice
   # MONITORING
@@ -118,6 +123,70 @@ services:
         - "3000:3000"
     networks:
       - microservice
+  # LOGGING
+  elasticsearch:
+    build:
+      context: ./logging/elasticsearch/
+      args:
+        ELK_VERSION: $ELK_VERSION
+    volumes:
+      - ./logging/elasticsearch/config/elasticsearch.yml:/usr/share/elasticsearch/config/elasticsearch.yml
+    ports:
+      - "9200:9200"
+      - "9300:9300"
+    environment:
+      ES_JAVA_OPTS: "-Xmx256m -Xms256m"
+      ELASTIC_PASSWORD: admin
+    networks:
+      - microservice
+  logstash:
+    build:
+      context: ./logging/logstash/
+      args:
+        ELK_VERSION: $ELK_VERSION
+    volumes:
+      - ./logging/logstash/config/logstash.yml:/usr/share/logstash/config/logstash.yml
+      - ./logging/logstash/pipeline:/usr/share/logstash/pipeline
+    ports:
+      - "5000:5000"
+      - "9600:9600"
+    expose: 
+      - "5044"
+    environment:
+      LS_JAVA_OPTS: "-Xmx256m -Xms256m"
+      PATH_CONFIG: "/usr/share/logstash/pipeline/*.conf"
+    networks:
+      - microservice
+    depends_on:
+      - elasticsearch
+  filebeat:
+    build: ./logging/filebeat
+    entrypoint: "filebeat -e -strict.perms=false"
+    volumes:
+      - ./logging/filebeat/config/filebeat.yml:/usr/share/filebeat/filebeat.yml
+      - auth_log:/var/log/microservice_poc/auth-service/log
+      - storage_log:/var/log/microservice_poc/storage-service/log
+      - registry_log:/var/log/microservice_poc/registry-service/log
+      - order_log:/var/log/microservice_poc/order-service/log
+    depends_on: 
+      - elasticsearch
+    links: 
+      - logstash
+    networks:
+      - microservice
+  kibana:
+    build:
+      context: ./logging/kibana/
+      args:
+        ELK_VERSION: $ELK_VERSION
+    volumes:
+      - ./logging/kibana/config/kibana.yml:/usr/share/kibana/config/kibana.yml
+    ports:
+      - "5601:5601"
+    networks:
+      - microservice
+    depends_on:
+      - elasticsearch
   # DEPENDENCIES
   database:
     image: mongo:latest
@@ -130,6 +199,11 @@ services:
 volumes:
   prometheus_data: {}
   grafana_data: {}
+  elasticsearch:
+  auth_log:
+  storage_log:
+  registry_log:
+  order_log:
 
 networks:
   microservice:

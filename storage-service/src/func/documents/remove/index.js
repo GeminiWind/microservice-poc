@@ -4,7 +4,7 @@ import { MAIN_COLLECTION_NAME } from '../../../constants';
 
 export async function deleteDocument(event) {
   const path = R.path(['params', 'path'], event);
-  const { connector } = event;
+  const { connector, instrumentation } = event;
 
   let doc;
 
@@ -15,10 +15,14 @@ export async function deleteDocument(event) {
       Path: path,
     });
   } catch (error) {
+    instrumentation.error(`Error in deleting document with Path:${path}`, error);
+
     throw new InternalError('Error in deleting document. Try again');
   }
 
   if (!doc) {
+    instrumentation.info(`Document with Path:"${path}" was not found.`);
+
     throw new NotFoundError(`Document with Path:"${path}" was not found.`);
   }
 

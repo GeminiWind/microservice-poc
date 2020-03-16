@@ -4,12 +4,14 @@ import { InternalError } from 'json-api-error';
 import * as R from 'ramda';
 
 export async function listServices(event) {
+  const { instrumentation } = event;
+
   let services;
 
   try {
     services = await fs.readJSON(path.resolve(__dirname, '../../../../services.json'));
   } catch (err) {
-    console.log('Error in listing service', err);
+    instrumentation.error('Error in listing service', err);
 
     throw new InternalError('Error in listing service. Please try again.');
   }

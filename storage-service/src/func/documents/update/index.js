@@ -10,7 +10,7 @@ export async function validateRequest(event) {
 
 export async function checkDocumentIsExisting(event) {
   const path = R.path(['params', 'path'], event);
-  const { connector } = event;
+  const { connector, instrumentation } = event;
 
   let isExisting;
 
@@ -21,13 +21,13 @@ export async function checkDocumentIsExisting(event) {
       Path: path,
     });
   } catch (error) {
-    console.log('Error in getting document', error);
+    instrumentation.error(`Error in getting document with Path:"${path}"`, error);
 
     throw new InternalError('Error in getting document. Try again');
   }
 
   if (!isExisting) {
-    console.log(`Document with Path:"${path}" was not found.`);
+    instrumentation.error(`Document with Path:"${path}" was not found.`);
 
     throw new NotFoundError(`Document with Path:"${path}" was not found.`);
   }
@@ -37,7 +37,7 @@ export async function checkDocumentIsExisting(event) {
 
 export async function updateDocument(event) {
   const path = R.path(['params', 'path'], event);
-  const { connector } = event;
+  const { connector, instrumentation } = event;
 
   let commandResult;
   try {
@@ -54,7 +54,7 @@ export async function updateDocument(event) {
       },
     );
   } catch (error) {
-    console.log('Error in updating document', error);
+    instrumentation.error(`Error in updating document with Path:"${path}"`, error);
 
     throw new InternalError('Error in updating document. Try again');
   }

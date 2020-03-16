@@ -9,7 +9,7 @@ export function validateDocument(event) {
 
 export async function createDocument(event) {
   const document = R.path(['body', 'data'], event);
-  const { connector } = event;
+  const { connector, instrumentation } = event;
 
   let createdDoc;
 
@@ -18,7 +18,7 @@ export async function createDocument(event) {
       ...R.pick(['Path', 'Content', 'Type', 'Attributes'], document.attributes),
     });
   } catch (error) {
-    console.log('Error in inserting document', error);
+    instrumentation.error('Error in inserting document', error);
 
     throw new InternalError('Error in inserting document. Try again');
   }
