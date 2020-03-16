@@ -24,10 +24,17 @@ RUN yarn build && \
 
 FROM node:alpine
 
+ARG TIMEZONE
+
+ENV TZ ${TIMEZONE}
+
 EXPOSE 3001
 
-RUN apk add --no-cache curl && \
+RUN apk add --no-cache curl \
+    tzdata && \
     npm install -g pm2
+
+RUN ln -snf /usr/share/zoneinfo/$TZ /etc/localtime && echo $TZ > /etc/timezone
 
 ADD https://github.com/ufoscout/docker-compose-wait/releases/download/2.6.0/wait /wait
 RUN chmod +x /wait
