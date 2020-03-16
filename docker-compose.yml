@@ -18,6 +18,8 @@ services:
     container_name: registry-service
     build:
       context: ./registry-service
+      args: 
+        TIMEZONE: ${TIMEZONE}
     volumes: 
       - ./registry-service/services.json:/usr/app/services.json
       - registry_log:/usr/app/log
@@ -27,6 +29,8 @@ services:
     container_name: storage-service
     build:
       context: ./storage-service
+      args: 
+        TIMEZONE: ${TIMEZONE}
     environment: 
       DB_HOST: database
       DB_PORT: 27017
@@ -43,6 +47,8 @@ services:
     container_name: auth-service
     build:
       context: ./auth-service
+      args: 
+        TIMEZONE: ${TIMEZONE}
     environment: 
       SECRET_KEY: ${SECRET_KEY:-2mHMHkCw10a1MKlTv8jiP60BFNKhbr8Fy1cIWQlqzAIEPDYIF3}
       WAIT_HOSTS: storage-service:3001
@@ -54,6 +60,8 @@ services:
     container_name: order-service
     build:
       context: ./order-service
+      args: 
+        TIMEZONE: ${TIMEZONE}
     environment: 
       WAIT_HOSTS: auth-service:3002
     volumes:
