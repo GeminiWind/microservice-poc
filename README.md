@@ -1,5 +1,8 @@
 # Mircoservice POC
 
+![CI/CD](https://github.com/GeminiWind/microservice-poc/workflows/CI/badge.svg?branch=master)
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
+
 This is prove of concept for microservice, which is mostly written in NodeJS.
 
 It provides basic overview about: 
