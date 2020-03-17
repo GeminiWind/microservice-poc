@@ -2,7 +2,7 @@ import express from 'express';
 import bodyParser from 'body-parser';
 import { InternalError } from 'json-api-error';
 import promMid from 'express-prometheus-middleware';
-import { useInstrumentation, useHttpLogger } from '@hai.dinh/service-libraries/middlewares';
+import { useInstrumentation, useHttpLogger, traceRequest } from '@hai.dinh/service-libraries/middlewares';
 import { jsonApiErrorHandler } from 'json-api-error/middlewares';
 import { MongoClient } from 'mongodb';
 import routes from './routes';
@@ -19,6 +19,7 @@ app.use(promMid({
 
 // configure
 app.use(bodyParser.json({ type: 'application/vnd.api+json' }));
+app.use(traceRequest);
 app.use(useInstrumentation);
 app.use(useHttpLogger);
 

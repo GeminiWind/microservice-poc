@@ -713,10 +713,10 @@
     exec-sh "^0.3.2"
     minimist "^1.2.0"
 
-"@hai.dinh/service-libraries@^0.2.0":
-  version "0.2.0"
-  resolved "https://registry.yarnpkg.com/@hai.dinh/service-libraries/-/service-libraries-0.2.0.tgz#757be6e9ed5e4acebc7856e287ec5d7070d7d238"
-  integrity sha512-nzZUPbCUo03wrgP+ZlQgJRjSpj1usgj1xzkPQNow4zEIkaT3D7WUb0wb1GtiuR1765LMV1uO0e9G3QcQ6xkUnw==
+"@hai.dinh/service-libraries@^0.3.1":
+  version "0.3.1"
+  resolved "https://registry.yarnpkg.com/@hai.dinh/service-libraries/-/service-libraries-0.3.1.tgz#00a336d6361666e335a41adca8d9cb9466e1ff44"
+  integrity sha512-oYI3zs7vQBCm8i+ZFI8j8Bx5O8AW0B4QtZncx5VjfYSNQKMrC+m64ckRmtNDbs6T+mtq1/C2UL0sbuPdleZxTg==
   dependencies:
     ajv "^6.10.2"
     axios "^0.19.0"
