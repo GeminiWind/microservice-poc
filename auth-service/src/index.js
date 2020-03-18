@@ -3,9 +3,11 @@ import bodyParser from 'body-parser';
 import passport from 'passport';
 import promMid from 'express-prometheus-middleware';
 import { jsonApiErrorHandler } from 'json-api-error/middlewares';
-import { useStorage, useInstrumentation } from '@hai.dinh/service-libraries/middlewares';
+import {
+  useStorage, useInstrumentation, useHttpLogger, traceRequest,
+} from '@hai.dinh/service-libraries/middlewares';
 import { jwtPassport } from './lib';
-import { loggingHttpRequest, malformedErrorHandler } from './lib/middlewares';
+import { malformedErrorHandler } from './lib/middlewares';
 import routes from './routes';
 
 const port = process.env.PORT || 3002;
@@ -19,9 +21,10 @@ app.use(promMid({
 }));
 
 app.use(bodyParser.json({ type: 'application/vnd.api+json' }));
+app.use(traceRequest);
 app.use(useStorage);
 app.use(useInstrumentation);
-app.use(loggingHttpRequest);
+app.use(useHttpLogger);
 
 // configure app for user JWT Passport
 jwtPassport(passport);

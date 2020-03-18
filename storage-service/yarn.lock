@@ -723,16 +723,17 @@
     exec-sh "^0.3.2"
     minimist "^1.2.0"
 
-"@hai.dinh/service-libraries@^0.1.1":
-  version "0.1.1"
-  resolved "https://registry.yarnpkg.com/@hai.dinh/service-libraries/-/service-libraries-0.1.1.tgz#fb43d484d47f25e35d5127466c92954de677d30f"
-  integrity sha512-ufmSck0enfP4EXYsdWl0L/MSGYDwD+gFGdl9F9c6lMMQjTkrrcp3oDVOapeOoPqZv1AGzI622WPs5Ttkz1PQ+g==
+"@hai.dinh/service-libraries@^0.4.0":
+  version "0.4.0"
+  resolved "https://registry.yarnpkg.com/@hai.dinh/service-libraries/-/service-libraries-0.4.0.tgz#fd8ed3048cd46f0f36a3565e0027a82b05b9c67c"
+  integrity sha512-a6c/48WhoEYDSNo7Tt17vnZRcnKBFXWoQ/0JCc7muiGNzd07pU7LpniONsKLR0CWHqUhFAViaD8FSqyqMp3XAA==
   dependencies:
     ajv "^6.10.2"
     axios "^0.19.0"
     json-api-error "^1.0.5"
     lodash.get "^4.4.2"
     log4js "^6.1.2"
+    moment-strftime "^0.5.0"
     qs "^6.9.1"
     ramda "^0.27.0"
 
@@ -3853,6 +3854,18 @@ mkdirp@^0.5.0, mkdirp@^0.5.1:
   integrity sha1-MAV0OOrGz3+MR2fzhkjWaX11yQM=
   dependencies:
     minimist "0.0.8"
+
+moment-strftime@^0.5.0:
+  version "0.5.0"
+  resolved "https://registry.yarnpkg.com/moment-strftime/-/moment-strftime-0.5.0.tgz#0cd395058cfabb2cbdbf49a2d3758aa22093d65a"
+  integrity sha512-0gwXdJEY1nD1YMlH9nLbDl+HLMfprzfxT2+qDkl29jGgDlVHzPCdwBBN0DPgY+e3+ur7tfdngxweKYBiT80nEA==
+  dependencies:
+    moment "^2.11.2"
+
+moment@^2.11.2:
+  version "2.24.0"
+  resolved "https://registry.yarnpkg.com/moment/-/moment-2.24.0.tgz#0d055d53f5052aa653c9f6eb68bb5d12bf5c2b5b"
+  integrity sha512-bV7f+6l2QigeBBZSM/6yTNq4P2fNpSWj/0e7jQcy87A8e7o2nAfP/34/2ky5Vw4B9S446EtIhodAzkFCcR4dQg==
 
 mongodb@^3.3.4:
   version "3.3.4"

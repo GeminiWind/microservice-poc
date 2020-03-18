@@ -1,7 +1,4 @@
-import loggingHttpRequest from './loggingHttpRequest';
 import malformedErrorHandler from './malformedErrorHandler';
 
-export {
-  loggingHttpRequest,
-  malformedErrorHandler,
-};
+// eslint-disable-next-line import/prefer-default-export
+export { malformedErrorHandler };
