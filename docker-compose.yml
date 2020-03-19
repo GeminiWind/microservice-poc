@@ -6,8 +6,10 @@ services:
     image: nginx:latest
     volumes: 
       - ./api-gateway/nginx.conf:/etc/nginx/nginx.conf
+      - ./api-gateway/cert:/etc/cert/microservice.com
     ports:
       - "80:80"
+      - "443:443"
     networks:
       - microservice
     depends_on: 
