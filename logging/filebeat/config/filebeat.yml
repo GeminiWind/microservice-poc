@@ -2,7 +2,43 @@ filebeat.inputs:
 - type: log
   enabled: true
   paths:
-    - /var/log/microservice_poc/**/*.log
+    - /var/log/microservice_poc/auth-service/**/*.log
+  fields:
+    origin: "auth-service"
+  fields_under_root: true
+  tags: ["auth-service"]
+- type: log
+  enabled: true
+  paths:
+    - /var/log/microservice_poc/storage-service/**/*.log
+  fields:
+    origin: "storage-service"
+  fields_under_root: true
+  tags: ["storage-service"]
+- type: log
+  enabled: true
+  paths:
+    - /var/log/microservice_poc/registry-service/**/*.log
+  fields:
+    origin: "registry-service"
+  fields_under_root: true
+  tags: ["registry-service"]
+- type: log
+  enabled: true
+  paths:
+    - /var/log/microservice_poc/order-service/**/*.log
+  fields:
+    origin: "order-service"
+  fields_under_root: true
+  tags: ["order-service"]
+- type: log
+  enabled: true
+  paths:
+    - /var/log/microservice_poc/api-gateway/**/api-gateway*.log
+  fields:
+    origin: "api-gateway"
+  fields_under_root: true
+  tags: ["api-gateway"]
 
 output.logstash:
   enabled: true
