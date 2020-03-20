@@ -40,4 +40,4 @@ RUN npm install -g pm2
 
 COPY --from=builder /usr/app .
 
-CMD pm2-runtime ecosystem.config.yml
+CMD pm2-runtime ecosystem.config.yml --env production

@@ -45,4 +45,4 @@ CMD /wait && \
     curl --location --request POST 'http://registry-service:3000/services' \
     --header 'Content-Type: application/vnd.api+json' \
     --data-raw '{"data": {"id": "order-service","type": "services","attributes": {"name": "order-service","endpoint": "http://order-service:3003"}}}' && \
-    pm2-runtime ecosystem.config.yml
+    pm2-runtime ecosystem.config.yml --env production

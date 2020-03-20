@@ -50,4 +50,4 @@ CMD /wait && \
     curl --location --request POST 'http://registry-service:3000/services' \
     --header 'Content-Type: application/vnd.api+json' \
     --data-raw '{"data": {"id": "auth-service","type": "services","attributes": {"name": "auth-service","endpoint": "http://auth-service:3002"}}}' && \
-    pm2-runtime ecosystem.config.yml
+    pm2-runtime ecosystem.config.yml --env production
