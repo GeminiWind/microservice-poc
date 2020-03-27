@@ -17,17 +17,6 @@ services:
       - auth-service
       - order-service
   # SERVICES
-  registry-service:
-    container_name: registry-service
-    build:
-      context: ./registry-service
-      args: 
-        TIMEZONE: ${TIMEZONE}
-    volumes: 
-      - ./registry-service/services.json:/usr/app/services.json
-      - registry_log:/usr/app/log
-    networks:
-      - microservice
   storage-service:
     container_name: storage-service
     build:
@@ -39,7 +28,7 @@ services:
       DB_PORT: 27017
       DB_NAME: ${DB_NAME:-database}
       DB_MAIN_TABLE: ${DB_MAIN_TABLE:-main}
-      WAIT_HOSTS: database:27017, registry-service:3000
+      WAIT_HOSTS: database:27017
       # DB_ROOT_USERNAME: admin
       # DB_ROOT_PASSWORD: admin
     volumes: 
@@ -177,7 +166,6 @@ services:
       - ./logging/filebeat/config/filebeat.yml:/usr/share/filebeat/filebeat.yml
       - auth_log:/var/log/microservice_poc/auth-service/log
       - storage_log:/var/log/microservice_poc/storage-service/log
-      - registry_log:/var/log/microservice_poc/registry-service/log
       - order_log:/var/log/microservice_poc/order-service/log
       - api_gateway_log:/var/log/microservice_poc/api-gateway/log
     depends_on: 
@@ -207,6 +195,14 @@ services:
     #   MONGO_INITDB_ROOT_PASSWORD: admin
     networks:
       - microservice
+  etcd:
+    image: bitnami/etcd
+    container_name: etcd
+    environment: 
+      ALLOW_NONE_AUTHENTICATION: "yes"
+      ETCD_ADVERTISE_CLIENT_URLS: "http://etcd:2379"
+    networks:
+      - microservice
 
 volumes:
   prometheus_data: {}
@@ -214,7 +210,6 @@ volumes:
   elasticsearch:
   auth_log:
   storage_log:
-  registry_log:
   order_log:
   api_gateway_log:
 

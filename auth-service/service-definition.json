@@ -1,0 +1,6 @@
+{
+  "id": "auth-service",
+  "name": "authentication service",
+  "category": "security",
+  "dependencies": ["storage-service"]
+}

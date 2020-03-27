@@ -54,11 +54,6 @@ scrape_configs:
     static_configs:
          - targets: ['storage-service:3001']
 
-  - job_name: 'registry-service'
-    scrape_interval: 5s
-    static_configs:
-         - targets: ['registry-service:3000']
-
   - job_name: 'node-exporter'
     scrape_interval: 5s
     static_configs:
