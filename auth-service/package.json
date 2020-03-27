@@ -19,8 +19,8 @@
   "author": "Gemini Wind<gemini.wind285@gmail.com>",
   "license": "MIT",
   "dependencies": {
-    "@hai.dinh/service-libraries": "^1.0.0",
-    "@hai.dinh/service-registry-cli": "^0.1.2",
+    "@hai.dinh/service-libraries": "^1.1.0",
+    "@hai.dinh/service-registry-cli": "^0.2.0",
     "bcrypt": "^3.0.6",
     "body-parser": "^1.19.0",
     "express": "^4.16.4",
