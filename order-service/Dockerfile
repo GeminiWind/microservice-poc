@@ -7,6 +7,7 @@ COPY [ \
     "ecosystem.config.yml", \
     "yarn.lock", \
     ".babelrc", \
+    "service-definition.json", \
     "./" \
     ]
 RUN yarn
@@ -20,7 +21,7 @@ RUN yarn build && \
     rm yarn.lock && \
     rm .babelrc
 
-FROM node:alpine
+FROM node:10.19.0-alpine
 
 ARG TIMEZONE
 
@@ -41,8 +42,11 @@ WORKDIR /usr/app
 
 COPY --from=builder /usr/app .
 
+RUN npm rebuild
+
+# FIXME: This is wrong way.
+# Please only register service after service is up (pm2)
 CMD /wait && \
-    curl --location --request POST 'http://registry-service:3000/services' \
-    --header 'Content-Type: application/vnd.api+json' \
-    --data-raw '{"data": {"id": "order-service","type": "services","attributes": {"name": "order-service","endpoint": "http://order-service:3003"}}}' && \
-    pm2-runtime ecosystem.config.yml --env production
+    yarn service-registry-cli pull -h etcd:2379 && \
+    yarn service-registry-cli register --service.endpoint http://order-service:3003 -h etcd:2379 && \
+    pm2-runtime ecosystem.config.yml

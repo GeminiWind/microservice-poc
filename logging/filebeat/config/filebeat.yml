@@ -18,14 +18,6 @@ filebeat.inputs:
 - type: log
   enabled: true
   paths:
-    - /var/log/microservice_poc/registry-service/**/*.log
-  fields:
-    origin: "registry-service"
-  fields_under_root: true
-  tags: ["registry-service"]
-- type: log
-  enabled: true
-  paths:
     - /var/log/microservice_poc/order-service/**/*.log
   fields:
     origin: "order-service"

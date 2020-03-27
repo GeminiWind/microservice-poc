@@ -1,0 +1,6 @@
+{
+  "id": "order-service",
+  "name": "order service",
+  "category": "business",
+  "dependencies": ["storage-service"]
+}

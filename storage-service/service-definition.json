@@ -1,0 +1,6 @@
+{
+  "id": "storage-service",
+  "name": "storage service",
+  "category": "storage",
+  "dependencies": []
+}

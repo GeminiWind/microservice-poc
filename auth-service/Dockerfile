@@ -7,6 +7,7 @@ COPY [ \
     "ecosystem.config.yml", \
     "yarn.lock", \
     ".babelrc", \
+    "service-definition.json", \
     "./" \
     ]
 RUN yarn
@@ -46,8 +47,11 @@ RUN ssh-keygen -t rsa -b 4096 -m PEM -f auth_service_rsa && \
 
 COPY --from=builder /usr/app .
 
+RUN npm rebuild
+
+# FIXME: This is wrong way.
+# Please only register service after service is up (pm2)
 CMD /wait && \
-    curl --location --request POST 'http://registry-service:3000/services' \
-    --header 'Content-Type: application/vnd.api+json' \
-    --data-raw '{"data": {"id": "auth-service","type": "services","attributes": {"name": "auth-service","endpoint": "http://auth-service:3002"}}}' && \
-    pm2-runtime ecosystem.config.yml --env production
+    yarn service-registry-cli pull -h etcd:2379 && \
+    yarn service-registry-cli register --service.endpoint http://auth-service:3002 -h etcd:2379 && \
+    pm2-runtime ecosystem.config.yml

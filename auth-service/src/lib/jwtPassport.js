@@ -3,9 +3,9 @@ import { StorageClient } from '@hai.dinh/service-libraries';
 import path from 'path';
 import readFile from './readFile';
 
-const storageClient = new StorageClient();
-
 export default async function jwtPassport(passport) {
+  const storageClient = await StorageClient.create();
+
   const publicKey = readFile(path.resolve(__dirname, '../../auth_service_rsa.pub'));
 
   const options = {
