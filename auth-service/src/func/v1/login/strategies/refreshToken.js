@@ -1,9 +1,9 @@
 import * as R from 'ramda';
 import { NotFoundError, BadRequestError, InternalError } from 'json-api-error';
 import path from 'path';
-import { readFile } from '../../../lib';
+import { readFile } from '../../../../lib';
 import { generateToken } from '../helpers';
-import { EXPIRY_ACCESS_TOKEN } from '../../../constants';
+import { EXPIRY_ACCESS_TOKEN } from '../../../../constants';
 
 export async function extractRefreshToken(req) {
   const refreshToken = R.path(['query', 'refresh_token'], req);
@@ -57,7 +57,7 @@ export async function generateTokens(req) {
     refreshToken,
   } = req;
 
-  const privateKey = readFile(path.resolve(__dirname, '../../../../auth_service_rsa'));
+  const privateKey = readFile(path.resolve(__dirname, '../../../../../auth_service_rsa'));
 
   // access token should contain both authorization and authentication
   const accessToken = generateToken(

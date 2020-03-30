@@ -1,7 +1,7 @@
 import * as R from 'ramda';
 import JsonApiError, { BadRequestError, InternalError } from 'json-api-error';
 import { schemaValidator } from '@hai.dinh/service-libraries';
-import schemas from '../../resources/schemas';
+import schemas from '../../../resources/schemas';
 
 export function validateRequest(req) {
   const { instrumentation } = req;

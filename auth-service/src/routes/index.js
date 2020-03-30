@@ -1,25 +1,32 @@
 import { httpHandler } from '@hai.dinh/service-libraries';
-import { authenticate } from '../lib/middlewares'
-import login from '../func/login';
-import register from '../func/register';
-import auth from '../func/auth';
+import routesVersioning from 'express-routes-versioning';
+import { authenticate } from '../lib/middlewares';
+import * as api from '../func';
+
+const routesVersioningHandler = routesVersioning();
 
 const routes = [
   {
     path: '/oauth/token',
     method: 'POST',
-    handler: httpHandler(login),
+    handler: routesVersioningHandler({
+      '^1.0.0': httpHandler(api.v1.login),
+    }),
   },
   {
     path: '/users',
     method: 'POST',
-    handler: httpHandler(register),
+    handler: routesVersioningHandler({
+      '^1.0.0': httpHandler(api.v1.register),
+    }),
   },
   {
     path: '/auth',
     method: 'GET',
     middlewares: [authenticate],
-    handler: httpHandler(auth),
+    handler: routesVersioningHandler({
+      '^1.0.0': httpHandler(api.v1.auth),
+    }),
   },
 ];
 

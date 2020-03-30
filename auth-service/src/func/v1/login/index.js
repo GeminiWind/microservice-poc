@@ -2,9 +2,9 @@
 import * as R from 'ramda';
 import { BadRequestError, NotImplementedError } from 'json-api-error';
 import { schemaValidator } from '@hai.dinh/service-libraries';
-import schemas from '../../resources/schemas';
+import schemas from '../../../resources/schemas';
 import { password, refreshToken } from './strategies';
-import { CLIENT_CREDENTIALS_GRANT_TYPE, REFRESH_TOKEN_GRANT_TYPE } from '../../constants';
+import { CLIENT_CREDENTIALS_GRANT_TYPE, REFRESH_TOKEN_GRANT_TYPE } from '../../../constants';
 
 export function validateRequest(req) {
   // FIXME: validate request by updating scheme
