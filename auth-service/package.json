@@ -1,7 +1,7 @@
 {
   "name": "@microservice-poc/auth-service",
   "description": "Simple authentication service in microservice system",
-  "version": "0.0.1",
+  "version": "1.0.0",
   "main": "build",
   "scripts": {
     "start": "yarn nodemon --legacy-watch src/index.js --exec babel-node",
