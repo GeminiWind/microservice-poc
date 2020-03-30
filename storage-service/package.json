@@ -19,7 +19,8 @@
     "express-routes-versioning": "^1.0.1",
     "json-api-error": "^1.0.5",
     "mongodb": "^3.3.4",
-    "ramda": "^0.26.1"
+    "ramda": "^0.26.1",
+    "swagger-jsdoc": "^4.0.0"
   },
   "devDependencies": {
     "@babel/cli": "^7.4.4",

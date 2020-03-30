@@ -45,6 +45,33 @@ export function returnResponse(event) {
   };
 }
 
+/**
+ * @swagger
+ *
+ * /create:
+ *   post:
+ *     description: Create a new document
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/vnd.api+json:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               Path:
+ *                 type: string
+ *               Content:
+ *                 type: object
+ *               Type:
+ *                 type: string
+ *               Attributes:
+ *                 type: object
+ *     responses:
+ *       200:
+ *         description: document
+ *       500:
+ *         description: InternalError
+ */
 export default R.tryCatch(
   R.pipeP(
     req => Promise.resolve(req),
