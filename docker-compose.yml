@@ -190,6 +190,8 @@ services:
   # DEPENDENCIES
   database:
     image: mongo:latest
+    volumes:
+      - mongo_data:/data/db
     # environment: 
     #   MONGO_INITDB_ROOT_USERNAME: admin
     #   MONGO_INITDB_ROOT_PASSWORD: admin
@@ -207,6 +209,7 @@ services:
 volumes:
   prometheus_data: {}
   grafana_data: {}
+  mongo_data:
   elasticsearch:
   auth_log:
   storage_log:

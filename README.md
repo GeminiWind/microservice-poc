@@ -7,7 +7,7 @@ This is prove of concept for microservice, which is mostly written in NodeJS.
 
 It provides basic overview about: 
 - How to design microservice architecture
-- What do you need to concern in implementing mircoservice architecture and the way to combat them, such as user authentication, service discovery, monitoring, logging
+- What do you need to concern in implementing mircoservice architecture and the way to combat them, such as user authentication, service discovery, monitoring, logging, tracing
 - How does service communicate within microservice system
 - The list go on
 
@@ -19,12 +19,16 @@ It provides basic overview about:
 
 ### Services
 
-- **Registry Service**: manage service state, execute registering/unregistering service.
-- **Storage Service**: support manipulating record in database by exposing API for other services in the system can consume. The systems use 1 database for storing.
-- **Authentication Service**: manage user (create/update/delete) and do authentication
+- **Storage Service**: supports manipulating record in database by exposing API for other services in the system can consume. The systems uses *"unique database across service"* strategy.
+- **Authentication Service**: provides security layer (authentication) for entire microservice system
 - **Order Service**: process orders.
-- **Monitoring**: monitor CPU, memory, network and more for each service
-- **Logging**: centralized logging for application with ELK stack
+- **Monitoring**: monitor resource system (CPU, memory, network in/out ...) for micro-service, built with Grafana & Promotheus
+- **Logging**: centralized logging for microservice system, built with [ELK stack](https://www.elastic.co/what-is/elk-stack).
+
+### Common libraries
+
+- [**service-registry-cli**](https://www.npmjs.com/package/@hai.dinh/service-registry-cli): registers and resolves dependencies in service to allow it can communicate with other service in microservice system
+- [**service-libraries**](https://www.npmjs.com/package/@hai.dinh/service-libraries): resolves service mesh: tracing, service discovery, logging and more.
 
 ## Prerequisites
 
