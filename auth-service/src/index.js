@@ -3,6 +3,7 @@ import bodyParser from 'body-parser';
 import passport from 'passport';
 import promMid from 'express-prometheus-middleware';
 import { StorageClient } from '@hai.dinh/service-libraries';
+import compression from 'compression';
 import { jsonApiErrorHandler } from 'json-api-error/middlewares';
 import {
   useInstrumentation, useHttpLogger, traceRequest,
@@ -25,6 +26,7 @@ app.use(bodyParser.json({ type: 'application/vnd.api+json' }));
 app.use(traceRequest);
 app.use(useInstrumentation);
 app.use(useHttpLogger);
+app.use(compression());
 
 let storageClient;
 app.use(async (req, _, next) => {

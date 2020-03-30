@@ -1,6 +1,7 @@
 import express from 'express';
 import bodyParser from 'body-parser';
 import promMid from 'express-prometheus-middleware';
+import compression from 'compression';
 import { jsonApiErrorHandler } from 'json-api-error/middlewares';
 import { StorageClient } from '@hai.dinh/service-libraries';
 import {
@@ -18,9 +19,9 @@ app.use(promMid({
   collectDefaultMetrics: true,
   requestDurationBuckets: [0.1, 0.5, 1, 1.5],
 }));
-
 app.use(bodyParser.json({ type: 'application/vnd.api+json' }));
 app.use(traceRequest);
+app.use(compression());
 
 let storageClient;
 app.use(async (req, _, next) => {

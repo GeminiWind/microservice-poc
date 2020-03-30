@@ -2,6 +2,7 @@ import express from 'express';
 import bodyParser from 'body-parser';
 import { InternalError } from 'json-api-error';
 import promMid from 'express-prometheus-middleware';
+import compression from 'compression';
 import { useInstrumentation, useHttpLogger, traceRequest } from '@hai.dinh/service-libraries/middlewares';
 import { jsonApiErrorHandler } from 'json-api-error/middlewares';
 import { MongoClient } from 'mongodb';
@@ -22,6 +23,7 @@ app.use(bodyParser.json({ type: 'application/vnd.api+json' }));
 app.use(traceRequest);
 app.use(useInstrumentation);
 app.use(useHttpLogger);
+app.use(compression());
 
 const port = process.env.PORT || 3001;
 
