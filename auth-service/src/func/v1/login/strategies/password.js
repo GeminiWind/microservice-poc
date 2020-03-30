@@ -3,9 +3,9 @@ import moment from 'moment';
 import { NotFoundError, BadRequestError, InternalError } from 'json-api-error';
 import crypto from 'crypto';
 import path from 'path';
-import { readFile } from '../../../lib';
+import { readFile } from '../../../../lib';
 import { generateToken, isMatchingWithHashedPassword } from '../helpers';
-import { EXPIRY_ACCESS_TOKEN, EXPIRY_REFRESH_TOKEN } from '../../../constants';
+import { EXPIRY_ACCESS_TOKEN, EXPIRY_REFRESH_TOKEN } from '../../../../constants';
 
 export async function getUserByEmail(req) {
   const {
@@ -56,7 +56,7 @@ export async function generateTokens(req) {
     instrumentation,
   } = req;
 
-  const privateKey = readFile(path.resolve(__dirname, '../../../../auth_service_rsa'));
+  const privateKey = readFile(path.resolve(__dirname, '../../../../../auth_service_rsa'));
 
   // access token should contain both authorization and authentication
   const accessToken = generateToken(

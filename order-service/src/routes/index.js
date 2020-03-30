@@ -1,21 +1,30 @@
 import { httpHandler } from '@hai.dinh/service-libraries';
-import * as func from '../func';
+import routesVersioning from 'express-routes-versioning';
+import * as api from '../func';
+
+const routesVersioningHandler = routesVersioning();
 
 const routes = [
   {
     path: '/orders',
     method: 'POST',
-    handler: httpHandler(func.create),
+    handler: routesVersioningHandler({
+      '^1.0.0': httpHandler(api.v1.create),
+    }),
   },
   {
     path: '/orders/:id',
     method: 'GET',
-    handler: httpHandler(func.read),
+    handler: routesVersioningHandler({
+      '^1.0.0': httpHandler(api.v1.read),
+    }),
   },
   {
     path: '/orders',
     method: 'GET',
-    handler: httpHandler(func.list),
+    handler: routesVersioningHandler({
+      '^1.0.0': httpHandler(api.v1.list),
+    }),
   },
   // {
   //   path: '/orders/:id',
@@ -25,7 +34,9 @@ const routes = [
   {
     path: '/orders/:id',
     method: 'DELETE',
-    handler: httpHandler(func.remove),
+    handler: routesVersioningHandler({
+      '1.0.0': httpHandler(api.v1.remove),
+    }),
   },
 ];
 
