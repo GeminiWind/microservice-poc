@@ -67,10 +67,51 @@ export function returnResponse(event) {
  *               Attributes:
  *                 type: object
  *     responses:
- *       200:
- *         description: document
+ *       201:
+ *         description: Success
+ *         content:
+ *           application/vnd.api+json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 id:
+ *                   type: string
+ *                 type:
+ *                   type: string
+ *                   enum: [documents]
+ *                 attributes:
+ *                   type: object
+ *                   properties:
+ *                     Path:
+ *                       type: string
+ *                     Content:
+ *                       type: object
+ *                     Type:
+ *                       type: string
+ *                     Attributes:
+ *                       type: object
  *       500:
  *         description: InternalError
+ *         content:
+ *           application/vnd.api+json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 errors:
+ *                   type: array
+ *                   items:
+ *                    type: object
+ *                    properties:
+ *                     id:
+ *                       type: string
+ *                     status:
+ *                       type: string
+ *                     code:
+ *                       type: string
+ *                     detail:
+ *                       type: string
+ *                     message:
+ *                       type: string
  */
 export default R.tryCatch(
   R.pipeP(

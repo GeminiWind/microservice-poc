@@ -50,9 +50,9 @@ app.use((req, _, next) => {
 });
 
 
-// TODO: intialize route
+// initialize routes
 routes.map((route) => {
-  app[route.method.toLowerCase()](route.path, route.handler);
+  app[route.method.toLowerCase()](route.path, route.middlewares || [], route.handler);
 });
 
 app.use(jsonApiErrorHandler);

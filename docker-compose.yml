@@ -60,6 +60,14 @@ services:
       - order_log:/usr/app/log
     networks:
       - microservice
+  swagger-service:
+    container_name: swagger-service
+    build:
+      context: ./swagger-service
+    ports:
+     - "5505:80"
+    networks:
+      - microservice
   # MONITORING
   prometheus:
     image: prom/prometheus:v2.16.0
