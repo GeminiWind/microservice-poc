@@ -10,24 +10,24 @@ const routes = [
     path: '/oauth/token',
     method: 'POST',
     handler: routesVersioningHandler({
-      '^1.0.0': httpHandler(api.v1.login),
-    }),
+      '^1.0.0': httpHandler(api.v1.login)
+    })
   },
   {
     path: '/users',
     method: 'POST',
     handler: routesVersioningHandler({
-      '^1.0.0': httpHandler(api.v1.register),
-    }),
+      '^1.0.0': httpHandler(api.v1.register)
+    })
   },
   {
     path: '/auth',
     method: 'GET',
     middlewares: [authenticate],
     handler: routesVersioningHandler({
-      '^1.0.0': httpHandler(api.v1.auth),
-    }),
-  },
+      '^1.0.0': httpHandler(api.v1.auth)
+    })
+  }
 ];
 
 export default routes;

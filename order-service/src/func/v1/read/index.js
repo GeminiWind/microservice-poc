@@ -6,8 +6,8 @@ export async function getOrder(req) {
     instrumentation,
     storageClient,
     params: {
-      id,
-    },
+      id
+    }
   } = req;
 
   const path = `users/${req.headers['x-remote-user']}/orders/${id}`;
@@ -28,7 +28,7 @@ export async function getOrder(req) {
 
   return {
     ...req,
-    record: response.body,
+    record: response.body
   };
 }
 
@@ -41,15 +41,15 @@ export function returnResponse(req) {
       data: {
         type: 'orders',
         id: record.Path.split('/')[3],
-        attributes: record.Content,
-      },
-    },
+        attributes: record.Content
+      }
+    }
   };
 }
 
 export default R.tryCatch(
   R.pipeP(
-    req => Promise.resolve(req),
+    (req) => Promise.resolve(req),
     getOrder,
     returnResponse,
   ),

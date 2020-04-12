@@ -9,5 +9,5 @@ export {
   read,
   list,
   update,
-  remove,
+  remove
 };

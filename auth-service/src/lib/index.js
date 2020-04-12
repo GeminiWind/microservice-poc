@@ -3,5 +3,5 @@ import readFile from './readFile';
 
 export {
   jwtPassport,
-  readFile,
+  readFile
 };

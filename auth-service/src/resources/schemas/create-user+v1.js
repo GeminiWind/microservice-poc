@@ -10,7 +10,7 @@ export default {
       properties: {
         type: {
           type: 'string',
-          enum: ['users'],
+          enum: ['users']
         },
         attributes: {
           type: 'object',
@@ -18,19 +18,19 @@ export default {
             email: {
               type: 'string',
               description: 'User email',
-              format: 'email',
+              format: 'email'
             },
             password: {
               type: 'string',
               description: 'User password',
-              minLength: 6,
-            },
+              minLength: 6
+            }
           },
-          required: ['email', 'password'],
-        },
+          required: ['email', 'password']
+        }
       },
-      required: ['type', 'attributes'],
-    },
+      required: ['type', 'attributes']
+    }
   },
-  required: ['data'],
+  required: ['data']
 };

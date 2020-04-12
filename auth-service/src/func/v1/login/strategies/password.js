@@ -14,10 +14,10 @@ export async function getUserByEmail(req) {
     body: {
       data: {
         attributes: {
-          email,
-        },
-      },
-    },
+          email
+        }
+      }
+    }
   } = req;
 
   const res = await storageClient.get(`users/${email}`);
@@ -30,7 +30,7 @@ export async function getUserByEmail(req) {
 
   return {
     ...req,
-    user: res.body.Content,
+    user: res.body.Content
   };
 }
 
@@ -53,7 +53,7 @@ export async function generateTokens(req) {
   const {
     user,
     storageClient,
-    instrumentation,
+    instrumentation
   } = req;
 
   const privateKey = readFile(path.resolve(__dirname, '../../../../../auth_service_rsa'));
@@ -62,32 +62,33 @@ export async function generateTokens(req) {
   const accessToken = generateToken(
     {
       email: user.email,
-      sub: user.email,
+      sub: user.email
     },
     privateKey,
     {
       expiresIn: `${EXPIRY_ACCESS_TOKEN}m`,
-      algorithm: 'RS256',
+      algorithm: 'RS256'
     },
   );
 
   // refresh token should only contain authorization
   // and live longer than access token
   let refreshToken;
+
   try {
     refreshToken = crypto.randomBytes(64).toString('hex');
     // create TTL record for refresh token
     await storageClient.create(`refresh-tokens/${refreshToken}`, {
       Attributes: {
-        expiredAt: moment().add(EXPIRY_REFRESH_TOKEN, 'm').toDate(),
+        expiredAt: moment().add(EXPIRY_REFRESH_TOKEN, 'm').toDate()
       },
       Content: {
         user: {
-          email: user.email,
+          email: user.email
         },
-        isEnable: 'true',
+        isEnable: 'true'
       },
-      Type: 'refresh-tokens',
+      Type: 'refresh-tokens'
     });
   } catch (error) {
     instrumentation.error('Error in generating refresh token', error);
@@ -99,7 +100,7 @@ export async function generateTokens(req) {
     ...req,
     accessToken,
     refreshToken,
-    expiresIn: EXPIRY_ACCESS_TOKEN * 60,
+    expiresIn: EXPIRY_ACCESS_TOKEN * 60
   };
 }
 
@@ -113,10 +114,10 @@ export function returnResponse(req) {
           access_token: req.accessToken,
           refresh_token: req.refreshToken,
           expires_in: req.expiresIn,
-          token_type: 'Bearer',
-        },
-      },
-    },
+          token_type: 'Bearer'
+        }
+      }
+    }
   };
 }
 

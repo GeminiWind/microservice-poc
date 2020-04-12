@@ -3,5 +3,5 @@ import updateOrderSchema from './update-order+v1';
 
 export default {
   createOrderSchema,
-  updateOrderSchema,
+  updateOrderSchema
 };

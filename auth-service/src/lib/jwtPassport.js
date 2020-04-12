@@ -11,12 +11,12 @@ export default async function jwtPassport(passport) {
   const options = {
     algorithm: ['RS256'],
     jwtFromRequest: ExtractJwt.fromAuthHeaderAsBearerToken(),
-    secretOrKey: publicKey,
+    secretOrKey: publicKey
   };
 
   passport.use(new JwtStrategy(options, async (jwtPayload, done) => {
     const {
-      email,
+      email
     } = jwtPayload;
 
     try {
@@ -28,12 +28,12 @@ export default async function jwtPassport(passport) {
             Content: {
               password,
               ...userAttributesWithoutPassword
-            },
-          },
+            }
+          }
         } = response;
 
         done(null, {
-          ...userAttributesWithoutPassword,
+          ...userAttributesWithoutPassword
         });
       } else {
         done(null, false);

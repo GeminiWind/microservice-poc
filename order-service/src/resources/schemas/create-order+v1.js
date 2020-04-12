@@ -10,11 +10,11 @@ export default {
       properties: {
         id: {
           type: 'string',
-          description: 'Order Id to identify order',
+          description: 'Order Id to identify order'
         },
         type: {
           type: 'string',
-          enum: ['orders'],
+          enum: ['orders']
         },
         attributes: {
           type: 'object',
@@ -26,104 +26,104 @@ export default {
                 properties: {
                   id: {
                     type: 'string',
-                    description: 'Product ID',
+                    description: 'Product ID'
                   },
                   price: {
                     type: 'number',
-                    description: 'Product price',
+                    description: 'Product price'
                   },
                   quantity: {
                     type: 'number',
-                    description: 'Product quantity',
+                    description: 'Product quantity'
                   },
                   total: {
                     type: 'number',
-                    description: 'Total price of product',
-                  },
-                },
-              },
+                    description: 'Total price of product'
+                  }
+                }
+              }
             },
             total: {
               type: 'number',
-              description: 'Total price of order',
+              description: 'Total price of order'
             },
             state: {
               type: 'string',
-              enum: ['created', 'processing', 'processed'],
+              enum: ['created', 'processing', 'processed']
             },
             customer: {
               type: 'object',
               properties: {
                 firstName: {
-                  type: 'string',
+                  type: 'string'
                 },
                 lastName: {
-                  type: 'string',
+                  type: 'string'
                 },
                 email: {
-                  type: 'string',
+                  type: 'string'
                 },
                 phone: {
-                  type: 'string',
-                },
-              },
+                  type: 'string'
+                }
+              }
             },
             shippingAddress: {
               type: 'object',
               properties: {
                 firstName: {
-                  type: 'string',
+                  type: 'string'
                 },
                 lastName: {
-                  type: 'string',
+                  type: 'string'
                 },
                 countryCode: {
-                  type: 'string',
+                  type: 'string'
                 },
                 street: {
-                  type: 'string',
+                  type: 'string'
                 },
                 city: {
-                  type: 'string',
+                  type: 'string'
                 },
                 postcode: {
-                  type: 'string',
-                },
-              },
+                  type: 'string'
+                }
+              }
             },
             billingAddress: {
               type: 'object',
               properties: {
                 firstName: {
-                  type: 'string',
+                  type: 'string'
                 },
                 lastName: {
-                  type: 'string',
+                  type: 'string'
                 },
                 countryCode: {
-                  type: 'string',
+                  type: 'string'
                 },
                 street: {
-                  type: 'string',
+                  type: 'string'
                 },
                 city: {
-                  type: 'string',
+                  type: 'string'
                 },
                 postcode: {
-                  type: 'string',
-                },
-              },
+                  type: 'string'
+                }
+              }
             },
             currencyCode: {
               type: 'string',
-              description: 'Currency code',
-            },
+              description: 'Currency code'
+            }
           },
-          required: ['products', 'total', 'state', 'billingAddress', 'shippingAddress', 'currencyCode', 'customer'],
-        },
+          required: ['products', 'total', 'state', 'billingAddress', 'shippingAddress', 'currencyCode', 'customer']
+        }
       },
-      required: ['type', 'attributes'],
-    },
+      required: ['type', 'attributes']
+    }
   },
-  required: ['data'],
+  required: ['data']
 };

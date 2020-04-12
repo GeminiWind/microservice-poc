@@ -14,7 +14,7 @@ export function validateRequest(req) {
 
     throw new BadRequestError({
       detail: 'Request is invalid',
-      source: validator.errors,
+      source: validator.errors
     });
   }
 
@@ -28,16 +28,16 @@ export async function createOrder(req) {
     body: {
       data: {
         id,
-        attributes,
-      },
-    },
+        attributes
+      }
+    }
   } = req;
 
   const record = {
     Content: {
-      ...attributes,
+      ...attributes
     },
-    Type: 'orders',
+    Type: 'orders'
   };
 
   try {
@@ -59,9 +59,9 @@ export function returnResponse(req) {
     body: {
       data: {
         id,
-        attributes,
-      },
-    },
+        attributes
+      }
+    }
   } = req;
 
   return {
@@ -70,15 +70,15 @@ export function returnResponse(req) {
       data: {
         type: 'orders',
         id,
-        attributes,
-      },
-    },
+        attributes
+      }
+    }
   };
 }
 
 export default R.tryCatch(
   R.pipeP(
-    req => Promise.resolve(req),
+    (req) => Promise.resolve(req),
     validateRequest,
     createOrder,
     returnResponse,

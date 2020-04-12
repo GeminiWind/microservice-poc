@@ -1,3 +1,4 @@
+import * as R from 'ramda';
 import express from 'express';
 import bodyParser from 'body-parser';
 import { InternalError } from 'json-api-error';
@@ -15,7 +16,7 @@ const app = express();
 app.use(promMid({
   metricsPath: '/metrics',
   collectDefaultMetrics: true,
-  requestDurationBuckets: [0.1, 0.5, 1, 1.5],
+  requestDurationBuckets: [0.1, 0.5, 1, 1.5]
 }));
 
 // configure
@@ -33,6 +34,7 @@ let connector;
   try {
     const urlConnection = `mongodb://${process.env.DB_HOST}:${process.env.DB_PORT}`;
     const client = await MongoClient.connect(urlConnection);
+
     connector = client.db(process.env.DB_NAME);
     await initMainCollection(connector, MAIN_COLLECTION_NAME);
   } catch (err) {
@@ -52,10 +54,10 @@ app.use((req, _, next) => {
 // security constraints
 app.disable('x-powered-by');
 
-// initialize route
-routes.map((route) => {
+// routes
+R.forEach((route) => {
   app[route.method.toLowerCase()](route.path, route.middlewares || [], route.handler);
-});
+}, routes);
 
 app.use(jsonApiErrorHandler);
 

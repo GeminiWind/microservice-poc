@@ -18,7 +18,7 @@ export async function checkDocumentIsExisting(event) {
     const collection = connector.collection(MAIN_COLLECTION_NAME);
 
     isExisting = await collection.findOne({
-      Path: path,
+      Path: path
     });
   } catch (error) {
     instrumentation.error(`Error in getting document with Path:"${path}"`, error);
@@ -40,17 +40,18 @@ export async function updateDocument(event) {
   const { connector, instrumentation } = event;
 
   let commandResult;
+
   try {
     const collection = connector.collection(MAIN_COLLECTION_NAME);
 
     commandResult = await collection.findOneAndUpdate(
       {
-        Path: path,
+        Path: path
       }, {
-        $set: R.path(['body', 'data', 'attributes'], event),
+        $set: R.path(['body', 'data', 'attributes'], event)
       },
       {
-        returnOriginal: false,
+        returnOriginal: false
       },
     );
   } catch (error) {
@@ -61,7 +62,7 @@ export async function updateDocument(event) {
 
   return {
     ...event,
-    document: commandResult.value,
+    document: commandResult.value
   };
 }
 
@@ -72,15 +73,15 @@ export function returnResponse(event) {
       data: {
         id: event.document._id, // eslint-disable-line no-underscore-dangle
         type: 'documents',
-        attributes: R.pick(['Path', 'Content', 'Type', 'Attributes'], event.document),
-      },
-    },
+        attributes: R.pick(['Path', 'Content', 'Type', 'Attributes'], event.document)
+      }
+    }
   };
 }
 
 export default R.tryCatch(
   R.pipeP(
-    req => Promise.resolve(req),
+    (req) => Promise.resolve(req),
     validateRequest,
     checkDocumentIsExisting,
     updateDocument,

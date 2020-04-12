@@ -3,5 +3,5 @@ import loginUserSchema from './login-user+v1';
 
 export default {
   createUserSchema,
-  loginUserSchema,
+  loginUserSchema
 };

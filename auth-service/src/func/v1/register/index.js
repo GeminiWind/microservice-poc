@@ -16,7 +16,7 @@ export function validateRequest(req) {
 
     throw new BadRequestError({
       detail: 'Request is invalid',
-      source: validator.errors,
+      source: validator.errors
     });
   }
 
@@ -30,10 +30,10 @@ export async function isUserEmailExist(req) {
     body: {
       data: {
         attributes: {
-          email,
-        },
-      },
-    },
+          email
+        }
+      }
+    }
   } = req;
 
   const res = await storageClient.get(`users/${email}`);
@@ -53,9 +53,9 @@ export async function createUser(req) {
     storageClient,
     body: {
       data: {
-        attributes,
-      },
-    },
+        attributes
+      }
+    }
   } = req;
 
   const salt = bcrypt.genSaltSync(SALT_ROUND);
@@ -64,13 +64,14 @@ export async function createUser(req) {
   const record = {
     Content: {
       email: attributes.email,
-      password: hashedPassword,
+      password: hashedPassword
     },
-    Type: 'users',
+    Type: 'users'
   };
 
   try {
     const path = `users/${attributes.email}`;
+
     await storageClient.create(path, record);
   } catch (error) {
     instrumentation.error('Error in creating user.', error);
@@ -88,16 +89,16 @@ export function returnResponse(req) {
       data: {
         type: 'users',
         attributes: {
-          email: req.body.data.attributes.email,
-        },
-      },
-    },
+          email: req.body.data.attributes.email
+        }
+      }
+    }
   };
 }
 
 export default R.tryCatch(
   R.pipeP(
-    req => Promise.resolve(req),
+    (req) => Promise.resolve(req),
     validateRequest,
     isUserEmailExist,
     createUser,

@@ -10,6 +10,7 @@ export async function listingDocuments(event) {
 
   // normalize sort op
   let sort = R.path(['query', 'sort'], event);
+
   if (sort) {
     sort = sort.split(',').reduce((acc, sortField) => {
       if (sortField.startsWith('-')) {
@@ -23,6 +24,7 @@ export async function listingDocuments(event) {
   }
 
   let query;
+
   try {
     // TODO: validate query to prevent injection
     // Query specification in here:  https://docs.mongodb.com/manual/reference/operator/query/
@@ -37,18 +39,20 @@ export async function listingDocuments(event) {
   }
 
   let documents;
+
   try {
     const collection = connector.collection(MAIN_COLLECTION_NAME);
+
     instrumentation.info('Listing records with the following condition', JSON.stringify({
       query,
       skip: skip && skip > 0 ? skip : 0,
       limit: limit && limit > 0 ? limit : 100,
-      sort: sort || {},
+      sort: sort || {}
     }));
     documents = await collection.find(query, {
       skip: skip && skip > 0 ? skip : 0,
       limit: limit && limit > 0 ? limit : 100,
-      sort: sort || {},
+      sort: sort || {}
     }).toArray();
   } catch (err) {
     instrumentation.error('Error in listing documents', err);
@@ -58,7 +62,7 @@ export async function listingDocuments(event) {
 
   return {
     ...event,
-    documents,
+    documents
   };
 }
 
@@ -66,18 +70,18 @@ export function returnResponse(event) {
   return {
     statusCode: 200,
     body: {
-      data: event.documents.map(doc => ({
+      data: event.documents.map((doc) => ({
         id: doc._id, // eslint-disable-line no-underscore-dangle
         type: 'documents',
-        attributes: R.pick(['Path', 'Content', 'Type', 'Attributes'], doc),
-      })),
-    },
+        attributes: R.pick(['Path', 'Content', 'Type', 'Attributes'], doc)
+      }))
+    }
   };
 }
 
 export default R.tryCatch(
   R.pipeP(
-    req => Promise.resolve(req),
+    (req) => Promise.resolve(req),
     listingDocuments,
     returnResponse,
   ),

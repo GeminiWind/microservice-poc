@@ -9,22 +9,22 @@ const routes = [
     path: '/orders',
     method: 'POST',
     handler: routesVersioningHandler({
-      '^1.0.0': httpHandler(api.v1.create),
-    }),
+      '^1.0.0': httpHandler(api.v1.create)
+    })
   },
   {
     path: '/orders/:id',
     method: 'GET',
     handler: routesVersioningHandler({
-      '^1.0.0': httpHandler(api.v1.read),
-    }),
+      '^1.0.0': httpHandler(api.v1.read)
+    })
   },
   {
     path: '/orders',
     method: 'GET',
     handler: routesVersioningHandler({
-      '^1.0.0': httpHandler(api.v1.list),
-    }),
+      '^1.0.0': httpHandler(api.v1.list)
+    })
   },
   // {
   //   path: '/orders/:id',
@@ -35,9 +35,9 @@ const routes = [
     path: '/orders/:id',
     method: 'DELETE',
     handler: routesVersioningHandler({
-      '1.0.0': httpHandler(api.v1.remove),
-    }),
-  },
+      '1.0.0': httpHandler(api.v1.remove)
+    })
+  }
 ];
 
 export default routes;

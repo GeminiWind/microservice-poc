@@ -12,7 +12,7 @@ export async function getDocument(event) {
     const collection = connector.collection(MAIN_COLLECTION_NAME);
 
     doc = await collection.findOne({
-      Path: path,
+      Path: path
     });
   } catch (error) {
     instrumentation.error(`Error in getting document with Path:"${path}"`, error);
@@ -28,7 +28,7 @@ export async function getDocument(event) {
 
   return {
     ...event,
-    doc,
+    doc
   };
 }
 
@@ -38,14 +38,14 @@ export function returnResponse(event) {
     body: {
       id: event.doc._id, // eslint-disable-line no-underscore-dangle
       type: 'documents',
-      attributes: R.pick(['Path', 'Content', 'Type', 'Attributes'], event.doc),
-    },
+      attributes: R.pick(['Path', 'Content', 'Type', 'Attributes'], event.doc)
+    }
   };
 }
 
 export default R.tryCatch(
   R.pipeP(
-    req => Promise.resolve(req),
+    (req) => Promise.resolve(req),
     getDocument,
     returnResponse,
   ),

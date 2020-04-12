@@ -5,7 +5,7 @@ export default {
   description: 'Token Schema',
   oneOf: [
     { $ref: '#/definitions/passwordGrantType' },
-    { $ref: '#/definitions/refreshTokenGrantType' },
+    { $ref: '#/definitions/refreshTokenGrantType' }
   ],
   required: ['data'],
   definitions: {
@@ -17,45 +17,45 @@ export default {
           properties: {
             type: {
               type: 'string',
-              enum: ['tokens'],
+              enum: ['tokens']
             },
             attributes: {
               type: 'object',
               properties: {
                 grant_type: {
                   type: 'string',
-                  enum: ['password'],
+                  enum: ['password']
                 },
                 email: {
                   type: 'string',
                   description: 'User email',
-                  format: 'email',
+                  format: 'email'
                 },
                 password: {
                   type: 'string',
                   description: 'User password',
-                  minLength: 6,
-                },
+                  minLength: 6
+                }
               },
               scopes: {
                 oneOf: [
                   {
-                    type: 'string',
+                    type: 'string'
                   },
                   {
                     type: 'array',
                     items: {
-                      type: 'string',
-                    },
-                  },
-                ],
+                      type: 'string'
+                    }
+                  }
+                ]
               },
-              required: ['grant_type', 'email', 'password'],
-            },
+              required: ['grant_type', 'email', 'password']
+            }
           },
-          required: ['type', 'attributes'],
-        },
-      },
+          required: ['type', 'attributes']
+        }
+      }
     },
     refreshTokenGrantType: {
       type: 'object',
@@ -65,26 +65,26 @@ export default {
           properties: {
             type: {
               type: 'string',
-              enum: ['tokens'],
+              enum: ['tokens']
             },
             attributes: {
               type: 'object',
               properties: {
                 grant_type: {
                   type: 'string',
-                  enum: ['refresh_token'],
+                  enum: ['refresh_token']
                 },
                 refresh_token: {
                   type: 'string',
-                  description: 'Refresh Token',
-                },
+                  description: 'Refresh Token'
+                }
               },
-              required: ['grant_type', 'refresh_token'],
-            },
+              required: ['grant_type', 'refresh_token']
+            }
           },
-          required: ['type', 'attributes'],
-        },
-      },
-    },
-  },
+          required: ['type', 'attributes']
+        }
+      }
+    }
+  }
 };

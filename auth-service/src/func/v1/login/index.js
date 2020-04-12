@@ -1,8 +1,6 @@
 
 import * as R from 'ramda';
-import { BadRequestError, NotImplementedError } from 'json-api-error';
-import { schemaValidator } from '@hai.dinh/service-libraries';
-import schemas from '../../../resources/schemas';
+import { NotImplementedError } from 'json-api-error';
 import { password, refreshToken } from './strategies';
 import { CLIENT_CREDENTIALS_GRANT_TYPE, REFRESH_TOKEN_GRANT_TYPE } from '../../../constants';
 
@@ -37,7 +35,7 @@ export function handleByGrantType(req) {
 }
 
 export default R.pipeP(
-  req => Promise.resolve(req),
+  (req) => Promise.resolve(req),
   validateRequest,
   handleByGrantType,
 );

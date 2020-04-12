@@ -5,12 +5,12 @@ export function returnResponse(req) {
     statusCode: 200,
     body: {},
     headers: {
-      'X-Useremail': req.user.email,
-    },
+      'X-Useremail': req.user.email
+    }
   };
 }
 
 export default R.pipeP(
-  req => Promise.resolve(req),
+  (req) => Promise.resolve(req),
   returnResponse,
 );

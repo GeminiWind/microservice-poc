@@ -12,7 +12,7 @@ export async function deleteDocument(event) {
     const collection = connector.collection(MAIN_COLLECTION_NAME);
 
     doc = await collection.findOneAndDelete({
-      Path: path,
+      Path: path
     });
   } catch (error) {
     instrumentation.error(`Error in deleting document with Path:${path}`, error);
@@ -31,13 +31,13 @@ export async function deleteDocument(event) {
 
 export function returnResponse() {
   return {
-    statusCode: 204,
+    statusCode: 204
   };
 }
 
 export default R.tryCatch(
   R.pipeP(
-    req => Promise.resolve(req),
+    (req) => Promise.resolve(req),
     deleteDocument,
     returnResponse,
   ),

@@ -3,5 +3,5 @@ import authenticate from './authenticate';
 
 export {
   malformedErrorHandler,
-  authenticate,
+  authenticate
 };

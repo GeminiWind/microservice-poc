@@ -2,11 +2,12 @@ import express from 'express';
 import bodyParser from 'body-parser';
 import passport from 'passport';
 import promMid from 'express-prometheus-middleware';
+import * as R from 'ramda';
 import { StorageClient } from '@hai.dinh/service-libraries';
 import compression from 'compression';
 import { jsonApiErrorHandler } from 'json-api-error/middlewares';
 import {
-  useInstrumentation, useHttpLogger, traceRequest,
+  useInstrumentation, useHttpLogger, traceRequest
 } from '@hai.dinh/service-libraries/middlewares';
 import { jwtPassport } from './lib';
 import { malformedErrorHandler } from './lib/middlewares';
@@ -19,7 +20,7 @@ const app = express();
 app.use(promMid({
   metricsPath: '/metrics',
   collectDefaultMetrics: true,
-  requestDurationBuckets: [0.1, 0.5, 1, 1.5],
+  requestDurationBuckets: [0.1, 0.5, 1, 1.5]
 }));
 
 app.use(bodyParser.json({ type: 'application/vnd.api+json' }));
@@ -29,6 +30,7 @@ app.use(useHttpLogger);
 app.use(compression());
 
 let storageClient;
+
 app.use(async (req, _, next) => {
   if (!storageClient) {
     storageClient = await StorageClient.create();
@@ -45,9 +47,9 @@ jwtPassport(passport);
 app.disable('x-powered-by');
 
 // routes
-routes.map((route) => {
+R.forEach((route) => {
   app[route.method.toLowerCase()](route.path, route.middlewares || [], route.handler);
-});
+}, routes);
 
 app.use(malformedErrorHandler);
 app.use(jsonApiErrorHandler);

@@ -5,5 +5,5 @@ import register from './register';
 export {
   auth,
   login,
-  register,
+  register
 };

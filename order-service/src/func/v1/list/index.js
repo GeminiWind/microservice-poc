@@ -4,7 +4,7 @@ import JsonApiError, { InternalError } from 'json-api-error';
 export async function listOrders(req) {
   const {
     instrumentation,
-    storageClient,
+    storageClient
   } = req;
 
   const userEmail = req.headers['x-remote-user'];
@@ -18,11 +18,11 @@ export async function listOrders(req) {
   try {
     response = await storageClient.list({
       query: {
-        Path: { $regex: `^users/${userEmail}/orders/.*$` },
+        Path: { $regex: `^users/${userEmail}/orders/.*$` }
       },
       limit,
       skip,
-      sort,
+      sort
     });
   } catch (error) {
     instrumentation.error('Error in listing orders', error);
@@ -32,7 +32,7 @@ export async function listOrders(req) {
 
   return {
     ...req,
-    records: response.body,
+    records: response.body
   };
 }
 
@@ -42,18 +42,18 @@ export function returnResponse(req) {
   return {
     statusCode: 200,
     body: {
-      data: R.map(record => ({
+      data: R.map((record) => ({
         type: 'orders',
         id: record.Path.split('/')[3],
-        attributes: record.Content,
-      }), records),
-    },
+        attributes: record.Content
+      }), records)
+    }
   };
 }
 
 export default R.tryCatch(
   R.pipeP(
-    req => Promise.resolve(req),
+    (req) => Promise.resolve(req),
     listOrders,
     returnResponse,
   ),

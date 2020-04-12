@@ -7,12 +7,12 @@ const initMainCollection = async (connector, collection, options = {}) => {
 
     // Create index `Path` in main collection
     await connector.collection(collection).createIndex('Path', {
-      unique: true,
+      unique: true
     });
 
     // Create index `expiredAt` to at TTL record
     await connector.collection(collection).createIndex({ 'Attributes.expiredAt': 1 }, {
-      expireAfterSeconds: 0,
+      expireAfterSeconds: 0
     });
   } catch (err) {
     console.log('Error in initializing main collection', err);
