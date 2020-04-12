@@ -41,7 +41,10 @@ app.use(async (req, _, next) => {
 // configure app for user JWT Passport
 jwtPassport(passport);
 
-// initialize routes
+// security constraints
+app.disable('x-powered-by');
+
+// routes
 routes.map((route) => {
   app[route.method.toLowerCase()](route.path, route.middlewares || [], route.handler);
 });

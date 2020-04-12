@@ -49,10 +49,12 @@ app.use((req, _, next) => {
   next();
 });
 
+// security constraints
+app.disable('x-powered-by');
 
-// TODO: intialize route
+// initialize route
 routes.map((route) => {
-  app[route.method.toLowerCase()](route.path, route.handler);
+  app[route.method.toLowerCase()](route.path, route.middlewares || [], route.handler);
 });
 
 app.use(jsonApiErrorHandler);

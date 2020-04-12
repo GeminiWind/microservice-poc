@@ -36,6 +36,9 @@ app.use(async (req, _, next) => {
 app.use(useInstrumentation);
 app.use(useHttpLogger);
 
+// security constraints
+app.disable('x-powered-by');
+
 // initialize routes
 routes.map((route) => {
   app[route.method.toLowerCase()](route.path, route.middlewares || [], route.handler);
