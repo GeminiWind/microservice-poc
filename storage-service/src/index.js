@@ -61,6 +61,20 @@ R.forEach((route) => {
 
 app.use(jsonApiErrorHandler);
 
-app.listen(port, () => {
+const server = app.listen(port, () => {
   console.log(`Storage Service is up at ${port}.`);
+});
+
+process.on('SIGINT', () => {
+  server.close(() => {
+    process.exit(0);
+  });
+});
+
+process.on('SIGTERM', () => {
+  server.close(() => {
+    // force close all MongoDB connection
+    MongoClient.close(true);
+    process.exit(0);
+  });
 });

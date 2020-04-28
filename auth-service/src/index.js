@@ -54,6 +54,18 @@ R.forEach((route) => {
 app.use(malformedErrorHandler);
 app.use(jsonApiErrorHandler);
 
-app.listen(port, () => {
+const server = app.listen(port, () => {
   console.log(`Auth Service is up at ${port}.`);
+});
+
+process.on('SIGINT', () => {
+  server.close(() => {
+    process.exit(0);
+  });
+});
+
+process.on('SIGTERM', () => {
+  server.close(() => {
+    process.exit(0);
+  });
 });
