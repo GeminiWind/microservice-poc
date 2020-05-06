@@ -1,5 +1,5 @@
 import * as R from 'ramda';
-import JsonApiError, { BadRequestError, InternalError } from 'json-api-error';
+import JsonApiError, { BadRequestError, InternalError, AggregateJsonApiError } from 'json-api-error';
 import { schemaValidator } from '@hai.dinh/service-libraries';
 import schemas from '../../../resources/schemas';
 
@@ -10,12 +10,16 @@ export function validateRequest(req) {
   const isValid = validator(req.body);
 
   if (!isValid) {
+    const errors = validator.errors.map(((ajvError) => new BadRequestError({
+      detail: `${ajvError.dataPath} ${ajvError.message}`,
+      source: {
+        pointer: ajvError.dataPath
+      }
+    })));
+
     instrumentation.error('Request is invalid', JSON.stringify(validator.errors, null, 2));
 
-    throw new BadRequestError({
-      detail: 'Request is invalid',
-      source: validator.errors
-    });
+    throw new AggregateJsonApiError(errors, 400);
   }
 
   return req;
