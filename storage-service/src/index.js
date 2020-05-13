@@ -33,7 +33,10 @@ let connector;
 (async () => {
   try {
     const urlConnection = `mongodb://${process.env.DB_HOST}:${process.env.DB_PORT}`;
-    const client = await MongoClient.connect(urlConnection);
+    const client = await MongoClient.connect(urlConnection, {
+      'auth.user': process.env.DB_ROOT_USERNAME,
+      'auth.password': process.env.DB_ROOT_PASSWORD
+    });
 
     connector = client.db(process.env.DB_NAME);
     await initMainCollection(connector, MAIN_COLLECTION_NAME);
