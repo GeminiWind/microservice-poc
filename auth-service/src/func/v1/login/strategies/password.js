@@ -1,106 +1,49 @@
 import * as R from 'ramda';
-import moment from 'moment';
-import { NotFoundError, BadRequestError, InternalError } from 'json-api-error';
-import crypto from 'crypto';
-import path from 'path';
-import { readFile } from '../../../../lib';
-import { generateToken, isMatchingWithHashedPassword } from '../helpers';
-import { EXPIRY_ACCESS_TOKEN, EXPIRY_REFRESH_TOKEN } from '../../../../constants';
+import { BadRequestError, InternalError } from 'json-api-error';
+import { Issuer } from 'openid-client';
 
-export async function getUserByEmail(req) {
-  const {
-    instrumentation,
-    storageClient,
-    body: {
-      data: {
-        attributes: {
-          email
-        }
-      }
-    }
-  } = req;
+export async function getTokensFromKeycloak(req) {
+  const username = R.path(['body', 'data', 'attributes', 'username'], req);
+  const password = R.path(['body', 'data', 'attributes', 'password'], req);
 
-  const res = await storageClient.get(`users/${email}`);
-
-  if (res.statusCode === 404) {
-    instrumentation.error('Your account does not exist.');
-
-    throw new NotFoundError('Your account does not exist or invalid.');
-  }
-
-  return {
-    ...req,
-    user: res.body.Content
-  };
-}
-
-export function verifyPassword(req) {
   const { instrumentation } = req;
 
-  const plainPassword = R.path(['body', 'data', 'attributes', 'password'], req);
-  const hashedPassword = R.path(['user', 'password'], req);
-
-  if (!isMatchingWithHashedPassword(plainPassword, hashedPassword)) {
-    instrumentation.error('Password does not match');
-
-    throw new BadRequestError('Your account does not exist or invalid.');
-  }
-
-  return req;
-}
-
-export async function generateTokens(req) {
-  const {
-    user,
-    storageClient,
-    instrumentation
-  } = req;
-
-  const privateKey = readFile(path.resolve(__dirname, '../../../../../auth_service_rsa'));
-
-  // access token should contain both authorization and authentication
-  const accessToken = generateToken(
-    {
-      email: user.email,
-      sub: user.email
-    },
-    privateKey,
-    {
-      expiresIn: `${EXPIRY_ACCESS_TOKEN}m`,
-      algorithm: 'RS256'
-    },
+  const keycloakIssuer = await Issuer.discover(
+    'http://keycloak:8080/auth/realms/microservice',
   );
+  
+  const client = new keycloakIssuer.Client({
+    client_id: 'microservice',
+    client_secret: '345482e7-4634-4b9d-b121-8bea96776ba6'
+  });
 
-  // refresh token should only contain authorization
-  // and live longer than access token
-  let refreshToken;
+  let response;
 
   try {
-    refreshToken = crypto.randomBytes(64).toString('hex');
-    // create TTL record for refresh token
-    await storageClient.create(`refresh-tokens/${refreshToken}`, {
-      Attributes: {
-        expiredAt: moment().add(EXPIRY_REFRESH_TOKEN, 'm').toDate()
-      },
-      Content: {
-        user: {
-          email: user.email
-        },
-        isEnable: 'true'
-      },
-      Type: 'refresh-tokens'
+    response = await client.grant({
+      grant_type: 'password',
+      username,
+      password
     });
   } catch (error) {
-    instrumentation.error('Error in generating refresh token', error);
+    if (error.message.includes('invalid_grant')) {
+      instrumentation.error('Your account does not exist or invalid.', error);
 
-    throw new InternalError('Error in generating tokens');
+      throw new BadRequestError('Your account does not exist or invalid.');
+    }
+
+    instrumentation.error('Error in generating tokens', error);
+
+    throw new InternalError('Error in generating tokens.');
   }
 
   return {
     ...req,
-    accessToken,
-    refreshToken,
-    expiresIn: EXPIRY_ACCESS_TOKEN * 60
+    access_token: response.access_token,
+    refresh_token: response.refresh_token,
+    expires_at: response.expires_at,
+    scope: response.scope,
+    token_type: response.token_type
   };
 }
 
@@ -111,10 +54,11 @@ export function returnResponse(req) {
       data: {
         type: 'tokens',
         attributes: {
-          access_token: req.accessToken,
-          refresh_token: req.refreshToken,
-          expires_in: req.expiresIn,
-          token_type: 'Bearer'
+          token_type: req.token_type,
+          access_token: req.access_token,
+          scope: req.scope,
+          expires_at: req.expires_at,
+          refresh_token: req.refresh_token
         }
       }
     }
@@ -122,8 +66,6 @@ export function returnResponse(req) {
 }
 
 export default R.pipeP(
-  getUserByEmail,
-  verifyPassword,
-  generateTokens,
+  getTokensFromKeycloak,
   returnResponse,
 );

@@ -2,7 +2,7 @@
 import * as R from 'ramda';
 import { NotImplementedError } from 'json-api-error';
 import { password, refreshToken } from './strategies';
-import { CLIENT_CREDENTIALS_GRANT_TYPE, REFRESH_TOKEN_GRANT_TYPE } from '../../../constants';
+import { PASSWORD_GRANT_TYPE, REFRESH_TOKEN_GRANT_TYPE } from '../../../constants';
 
 export function validateRequest(req) {
   // FIXME: validate request by updating scheme
@@ -21,9 +21,9 @@ export function validateRequest(req) {
 }
 
 export function handleByGrantType(req) {
-  const grantType = R.path(['query', 'grant_type'], req);
+  const grantType = R.path(['body', 'data', 'attributes', 'grant_type'], req);
 
-  if (grantType === CLIENT_CREDENTIALS_GRANT_TYPE) {
+  if (grantType === PASSWORD_GRANT_TYPE) {
     return password(req);
   }
 

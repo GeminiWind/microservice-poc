@@ -1,82 +1,44 @@
 import * as R from 'ramda';
 import { NotFoundError, BadRequestError, InternalError } from 'json-api-error';
-import path from 'path';
-import { readFile } from '../../../../lib';
-import { generateToken } from '../helpers';
-import { EXPIRY_ACCESS_TOKEN } from '../../../../constants';
+import { Issuer } from 'openid-client';
 
-export async function extractRefreshToken(req) {
-  const refreshToken = R.path(['query', 'refresh_token'], req);
-  const { storageClient, instrumentation } = req;
+export async function getTokensFromKeyCloak(req) {
+  const refreshToken = R.path(['body', 'data', 'attributes', 'refresh_token'], req);
+
+  const { instrumentation } = req;
+
+  const keycloakIssuer = await Issuer.discover(
+    'http://keycloak:8080/auth/realms/microservice',
+  );
+  
+  const client = new keycloakIssuer.Client({
+    client_id: 'microservice',
+    client_secret: '345482e7-4634-4b9d-b121-8bea96776ba6'
+  });
 
   let response;
 
   try {
-    response = await storageClient.get(`refresh-tokens/${refreshToken}`);
+    response = await client.refresh(refreshToken);
   } catch (error) {
-    instrumentation.error(`Error in getting refreshToken "${refreshToken}".`, error);
+    if (error.message.includes('invalid_grant')) {
+      instrumentation.error('Your refresh_token is invalid.', error);
 
-    throw new InternalError('Error in handling refresh token');
-  }
+      throw new BadRequestError('Your refresh_token is invalid.');
+    }
 
-  if (response.statusCode === 404) {
-    throw new BadRequestError(`Refresh token ${refreshToken} was invalid`);
-  }
+    instrumentation.error('Error in generating tokens', error);
 
-  return Promise.resolve({
-    ...req,
-    email: response.body.Content.user.email,
-    refreshToken
-  });
-}
-
-export async function getUserByEmail(req) {
-  const {
-    instrumentation,
-    storageClient,
-    email
-  } = req;
-
-  const res = await storageClient.get(`users/${email}`);
-
-  if (res.statusCode === 404) {
-    instrumentation.error('Your account does not exist.');
-
-    throw new NotFoundError('Your account does not exist or invalid.');
+    throw new InternalError('Error in generating tokens.');
   }
 
   return {
     ...req,
-    user: res.body.Content
-  };
-}
-
-export async function generateTokens(req) {
-  const {
-    user,
-    refreshToken
-  } = req;
-
-  const privateKey = readFile(path.resolve(__dirname, '../../../../../auth_service_rsa'));
-
-  // access token should contain both authorization and authentication
-  const accessToken = generateToken(
-    {
-      email: user.email,
-      sub: user.email
-    },
-    privateKey,
-    {
-      expiresIn: `${EXPIRY_ACCESS_TOKEN}m`,
-      algorithm: 'RS256'
-    },
-  );
-
-  return {
-    ...req,
-    accessToken,
-    refreshToken,
-    expiresIn: EXPIRY_ACCESS_TOKEN * 60
+    access_token: response.access_token,
+    refresh_token: response.refresh_token,
+    expires_at: response.expires_at,
+    scope: response.scope,
+    token_type: response.token_type
   };
 }
 
@@ -87,10 +49,11 @@ export function returnResponse(req) {
       data: {
         type: 'tokens',
         attributes: {
-          access_token: req.accessToken,
-          refresh_token: req.refreshToken,
-          expires_in: req.expiresIn,
-          token_type: 'Bearer'
+          token_type: req.token_type,
+          access_token: req.access_token,
+          scope: req.scope,
+          expires_at: req.expires_at,
+          refresh_token: req.refresh_token
         }
       }
     }
@@ -98,8 +61,6 @@ export function returnResponse(req) {
 }
 
 export default R.pipeP(
-  extractRefreshToken,
-  getUserByEmail,
-  generateTokens,
+  getTokensFromKeyCloak,
   returnResponse,
 );

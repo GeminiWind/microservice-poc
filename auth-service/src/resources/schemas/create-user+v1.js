@@ -15,6 +15,10 @@ export default {
         attributes: {
           type: 'object',
           properties: {
+            username: {
+              type: 'string',
+              description: 'User name'
+            },
             email: {
               type: 'string',
               description: 'User email',
@@ -24,9 +28,31 @@ export default {
               type: 'string',
               description: 'User password',
               minLength: 6
+            },
+            first_name: {
+              type: 'string',
+              description: 'First name'
+            },
+            last_name: {
+              type: 'string',
+              description: 'Last name'
+            },
+            attributes: {
+              type: 'object',
+              patternProperties: {
+                '^.*$': {
+                  anyOf: [
+                    { type: 'string' },
+                    { type: 'integer' },
+                    { type: 'boolean' },
+                    { type: 'null' }
+                  ]
+                }
+              },
+              additionalProperties: false
             }
           },
-          required: ['email', 'password']
+          required: ['email', 'password', 'username']
         }
       },
       required: ['type', 'attributes']

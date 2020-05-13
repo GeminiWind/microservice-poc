@@ -29,7 +29,9 @@
     "express-routes-versioning": "^1.0.1",
     "json-api-error": "^1.1.0",
     "jsonwebtoken": "^8.5.1",
+    "keycloak-admin": "^1.13.0",
     "moment": "^2.24.0",
+    "openid-client": "^3.15.1",
     "passport": "^0.4.0",
     "passport-jwt": "^4.0.0",
     "ramda": "^0.26.1"

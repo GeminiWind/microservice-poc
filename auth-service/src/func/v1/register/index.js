@@ -1,8 +1,7 @@
-import bcrypt from 'bcrypt';
 import * as R from 'ramda';
 import JsonApiError, { BadRequestError, InternalError, AggregateJsonApiError } from 'json-api-error';
 import { schemaValidator } from '@hai.dinh/service-libraries';
-import { SALT_ROUND } from '../../../constants';
+import KcAdminClient from 'keycloak-admin';
 import schemas from '../../../resources/schemas';
 
 export function validateRequest(req) {
@@ -27,60 +26,35 @@ export function validateRequest(req) {
   return req;
 }
 
-export async function isUserEmailExist(req) {
-  const {
-    instrumentation,
-    storageClient,
-    body: {
-      data: {
-        attributes: {
-          email
-        }
-      }
-    }
-  } = req;
-
-  const res = await storageClient.get(`users/${email}`);
-
-  if (res.statusCode === 200) {
-    instrumentation.error(`User with ${email} already exist`);
-
-    throw new BadRequestError('Your account is already existing or invalid.');
-  }
-
-  return req;
-}
-
 export async function createUser(req) {
-  const {
-    instrumentation,
-    storageClient,
-    body: {
-      data: {
-        attributes
-      }
-    }
-  } = req;
+  const { instrumentation } = req;
 
-  const salt = bcrypt.genSaltSync(SALT_ROUND);
-  const hashedPassword = bcrypt.hashSync(attributes.password, salt);
+  const kcAdminClient = new KcAdminClient({
+    baseUrl: 'http://keycloak:8080/auth',
+    realmName: 'master'
+  });
 
-  const record = {
-    Content: {
-      email: attributes.email,
-      password: hashedPassword
-    },
-    Type: 'users'
-  };
+  await kcAdminClient.auth({
+    username: 'admin',
+    password: 'Pa55w0rd',
+    grantType: 'password',
+    clientId: 'admin-cli'
+  });
 
   try {
-    const path = `users/${attributes.email}`;
-
-    await storageClient.create(path, record);
+    await kcAdminClient.users.create({
+      realm: 'microservice',
+      username: R.path(['body', 'data', 'attributes', 'username'], req),
+      email: R.path(['body', 'data', 'attributes', 'email'], req),
+      firstName: R.path(['body', 'data', 'attributes', 'first_name'], req),
+      lastName: R.path(['body', 'data', 'attributes', 'last_name'], req),
+      attributes: R.path(['body', 'data', 'attributes', 'attributes'], req),
+      enabled: true
+    });
   } catch (error) {
-    instrumentation.error('Error in creating user.', error);
+    instrumentation.error('Error in creating new user', error);
 
-    throw new InternalError('Error in creating user.');
+    throw new InternalError('Error in creating new user');
   }
 
   return req;
@@ -93,7 +67,11 @@ export function returnResponse(req) {
       data: {
         type: 'users',
         attributes: {
-          email: req.body.data.attributes.email
+          username: R.path(['body', 'data', 'attributes', 'username'], req),
+          email: R.path(['body', 'data', 'attributes', 'email'], req),
+          firstName: R.path(['body', 'data', 'attributes', 'first_name'], req),
+          lastName: R.path(['body', 'data', 'attributes', 'last_name'], req),
+          attributes: R.path(['body', 'data', 'attributes', 'attributes'], req)
         }
       }
     }
@@ -104,7 +82,6 @@ export default R.tryCatch(
   R.pipeP(
     (req) => Promise.resolve(req),
     validateRequest,
-    isUserEmailExist,
     createUser,
     returnResponse,
   ),

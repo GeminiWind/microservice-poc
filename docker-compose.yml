@@ -199,6 +199,35 @@ services:
       ME_CONFIG_MONGODB_ADMINPASSWORD: ${DB_ROOT_PASSWORD}
     networks:
       - microservice
+  mysql:
+    image: mysql:5.7
+    volumes:
+      - mysql_data:/var/lib/mysql
+    environment:
+      MYSQL_ROOT_PASSWORD: root
+      MYSQL_DATABASE: keycloak
+      MYSQL_USER: keycloak
+      MYSQL_PASSWORD: password
+    networks:
+      - microservice
+  keycloak:
+    image: quay.io/keycloak/keycloak:latest
+    environment:
+      DB_VENDOR: MYSQL
+      DB_ADDR: mysql
+      DB_DATABASE: keycloak
+      DB_USER: keycloak
+      DB_PASSWORD: password
+      KEYCLOAK_USER: admin
+      KEYCLOAK_PASSWORD: Pa55w0rd
+      # Uncomment the line below if you want to specify JDBC parameters. The parameter below is just an example, and it shouldn't be used in production without knowledge. It is highly recommended that you read the MySQL JDBC driver documentation in order to use it.
+      #JDBC_PARAMS: "connectTimeout=30000"
+    ports:
+      - 8888:8080
+    depends_on:
+      - mysql
+    networks:
+      - microservice
   etcd:
     image: bitnami/etcd
     container_name: etcd
@@ -212,6 +241,7 @@ volumes:
   prometheus_data: {}
   grafana_data: {}
   mongo_data:
+  mysql_data:
   elasticsearch:
   auth_log:
   storage_log:
