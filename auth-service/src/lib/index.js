@@ -1,7 +1,4 @@
-import jwtPassport from './jwtPassport';
 import readFile from './readFile';
 
-export {
-  jwtPassport,
-  readFile
-};
+// eslint-disable-next-line import/prefer-default-export
+export { readFile };

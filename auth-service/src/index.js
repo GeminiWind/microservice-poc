@@ -1,6 +1,5 @@
 import express from 'express';
 import bodyParser from 'body-parser';
-import passport from 'passport';
 import promMid from 'express-prometheus-middleware';
 import * as R from 'ramda';
 import { StorageClient } from '@hai.dinh/service-libraries';
@@ -9,7 +8,6 @@ import { jsonApiErrorHandler } from 'json-api-error/middlewares';
 import {
   useInstrumentation, useHttpLogger, traceRequest
 } from '@hai.dinh/service-libraries/middlewares';
-import { jwtPassport } from './lib';
 import { malformedErrorHandler } from './lib/middlewares';
 import routes from './routes';
 
@@ -39,9 +37,6 @@ app.use(async (req, _, next) => {
 
   next();
 });
-
-// configure app for user JWT Passport
-jwtPassport(passport);
 
 // security constraints
 app.disable('x-powered-by');

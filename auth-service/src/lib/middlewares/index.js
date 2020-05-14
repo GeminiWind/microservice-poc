@@ -1,7 +1,4 @@
 import malformedErrorHandler from './malformedErrorHandler';
-import authenticate from './authenticate';
 
-export {
-  malformedErrorHandler,
-  authenticate
-};
+// eslint-disable-next-line import/prefer-default-export
+export { malformedErrorHandler };

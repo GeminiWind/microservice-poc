@@ -30,7 +30,7 @@ export async function createUser(req) {
   const { instrumentation } = req;
 
   const kcAdminClient = new KcAdminClient({
-    baseUrl: 'http://keycloak:8080/auth',
+    baseUrl: process.env.KEYCLOAK_BASEURL,
     realmName: 'master'
   });
 

@@ -9,12 +9,12 @@ export async function getTokensFromKeycloak(req) {
   const { instrumentation } = req;
 
   const keycloakIssuer = await Issuer.discover(
-    'http://keycloak:8080/auth/realms/microservice',
+    `${process.env.KEYCLOAK_BASEURL}/realms/${process.env.KEYCLOAK_REALM}`,
   );
   
   const client = new keycloakIssuer.Client({
-    client_id: 'microservice',
-    client_secret: '345482e7-4634-4b9d-b121-8bea96776ba6'
+    client_id: process.env.CLIENT_ID,
+    client_secret: process.env.CLIENT_SECRET
   });
 
   let response;

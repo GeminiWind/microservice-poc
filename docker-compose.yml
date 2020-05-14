@@ -43,8 +43,11 @@ services:
       context: ./auth-service
       args: 
         TIMEZONE: ${TIMEZONE}
-    environment: 
-      SECRET_KEY: ${SECRET_KEY:-2mHMHkCw10a1MKlTv8jiP60BFNKhbr8Fy1cIWQlqzAIEPDYIF3}
+    environment:
+      KEYCLOAK_BASEURL: http://keycloak:8080/auth
+      KEYCLOAK_REALM: microservice
+      CLIENT_ID: microservice
+      CLIENT_SECRET: 94ab8279-e4fd-4b31-8b24-de21872a4a63
       WAIT_HOSTS: storage-service:3001
     volumes: 
       - auth_log:/usr/app/log
@@ -220,8 +223,7 @@ services:
       DB_PASSWORD: password
       KEYCLOAK_USER: admin
       KEYCLOAK_PASSWORD: Pa55w0rd
-      # Uncomment the line below if you want to specify JDBC parameters. The parameter below is just an example, and it shouldn't be used in production without knowledge. It is highly recommended that you read the MySQL JDBC driver documentation in order to use it.
-      #JDBC_PARAMS: "connectTimeout=30000"
+      # KEYCLOAK_IMPORT: /opt/jboss/keycloak/imports/microservice-realm.json
     ports:
       - 8888:8080
     depends_on:

@@ -23,7 +23,6 @@ const routes = [
   {
     path: '/auth',
     method: 'GET',
-    middlewares: [authenticate],
     handler: routesVersioningHandler({
       '^1.0.0': httpHandler(api.v1.auth)
     })
