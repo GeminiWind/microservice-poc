@@ -7,14 +7,22 @@ export async function getTokensFromKeyCloak(req) {
 
   const { instrumentation } = req;
 
-  const keycloakIssuer = await Issuer.discover(
-    `${process.env.KEYCLOAK_BASEURL}/realms/${process.env.KEYCLOAK_REALM}`,
-  );
-  
-  const client = new keycloakIssuer.Client({
-    client_id: process.env.CLIENT_ID,
-    client_secret: process.env.CLIENT_SECRET
-  });
+  let client;
+
+  try {
+    const keycloakIssuer = await Issuer.discover(
+      `${process.env.KEYCLOAK_BASEURL}/realms/${process.env.KEYCLOAK_REALM}`,
+    );
+    
+    client = new keycloakIssuer.Client({
+      client_id: process.env.CLIENT_ID,
+      client_secret: process.env.CLIENT_SECRET
+    });
+  } catch (error) {
+    instrumentation.error('Error in connecting to Keycloak', error);
+
+    throw new InternalError('Error in getting user info.');
+  }
 
   let response;
 
