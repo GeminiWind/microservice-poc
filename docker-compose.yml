@@ -45,9 +45,9 @@ services:
         TIMEZONE: ${TIMEZONE}
     environment:
       KEYCLOAK_BASEURL: http://keycloak:8080/auth
-      KEYCLOAK_REALM: microservice
+      KEYCLOAK_REALM: example
       CLIENT_ID: microservice
-      CLIENT_SECRET: 94ab8279-e4fd-4b31-8b24-de21872a4a63
+      CLIENT_SECRET: f7832ed5-125e-4125-88ee-b2656b3f4213
       WAIT_HOSTS: storage-service:3001
     volumes: 
       - auth_log:/usr/app/log
@@ -215,6 +215,8 @@ services:
       - microservice
   keycloak:
     image: quay.io/keycloak/keycloak:latest
+    volumes:
+      - ./keycloak:/opt/jboss/keycloak/imports
     environment:
       DB_VENDOR: MYSQL
       DB_ADDR: mysql
@@ -223,7 +225,7 @@ services:
       DB_PASSWORD: password
       KEYCLOAK_USER: admin
       KEYCLOAK_PASSWORD: Pa55w0rd
-      # KEYCLOAK_IMPORT: /opt/jboss/keycloak/imports/microservice-realm.json
+      KEYCLOAK_IMPORT: /opt/jboss/keycloak/imports/example-realm.json
     ports:
       - 8888:8080
     depends_on:

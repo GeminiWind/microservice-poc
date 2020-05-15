@@ -43,7 +43,7 @@ export async function createUser(req) {
 
   try {
     await kcAdminClient.users.create({
-      realm: 'microservice',
+      realm: process.env.KEYCLOAK_REALM,
       username: R.path(['body', 'data', 'attributes', 'username'], req),
       email: R.path(['body', 'data', 'attributes', 'email'], req),
       firstName: R.path(['body', 'data', 'attributes', 'first_name'], req),
