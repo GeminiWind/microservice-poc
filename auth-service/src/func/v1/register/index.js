@@ -41,8 +41,10 @@ export async function createUser(req) {
     clientId: 'admin-cli'
   });
 
+  let user;
+
   try {
-    await kcAdminClient.users.create({
+    user = await kcAdminClient.users.create({
       realm: process.env.KEYCLOAK_REALM,
       username: R.path(['body', 'data', 'attributes', 'username'], req),
       email: R.path(['body', 'data', 'attributes', 'email'], req),
@@ -55,6 +57,43 @@ export async function createUser(req) {
     instrumentation.error('Error in creating new user', error);
 
     throw new InternalError('Error in creating new user');
+  }
+
+  return {
+    ...req,
+    user
+  };
+}
+
+export async function setPassword(req) {
+  const { instrumentation } = req;
+
+  const kcAdminClient = new KcAdminClient({
+    baseUrl: process.env.KEYCLOAK_BASEURL,
+    realmName: 'master'
+  });
+
+  await kcAdminClient.auth({
+    username: 'admin',
+    password: 'Pa55w0rd',
+    grantType: 'password',
+    clientId: 'admin-cli'
+  });
+
+  try {
+    await kcAdminClient.users.resetPassword({
+      id: req.user.id,
+      credential: {
+        temporary: false,
+        type: 'password',
+        value: R.path(['body', 'data', 'attributes', 'password'], req)
+      },
+      realm: process.env.KEYCLOAK_REALM
+    });
+  } catch (error) {
+    instrumentation.error('Error in setting password for user', error);
+
+    throw new InternalError('Error in setting password for user.');
   }
 
   return req;
@@ -83,6 +122,7 @@ export default R.tryCatch(
     (req) => Promise.resolve(req),
     validateRequest,
     createUser,
+    setPassword,
     returnResponse,
   ),
   (e) => {
