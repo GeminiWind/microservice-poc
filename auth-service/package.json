@@ -21,7 +21,7 @@
   "dependencies": {
     "@hai.dinh/service-libraries": "^1.1.0",
     "@hai.dinh/service-registry-cli": "^0.2.0",
-    "bcrypt": "^3.0.6",
+    "bcrypt": "^5.0.0",
     "body-parser": "^1.19.0",
     "compression": "^1.7.4",
     "express": "^4.16.4",
