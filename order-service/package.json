@@ -27,7 +27,7 @@
     "express-prometheus-middleware": "^0.8.5",
     "express-routes-versioning": "^1.0.1",
     "json-api-error": "^1.1.0",
-    "moment": "^2.24.0",
+    "moment": "^2.29.2",
     "ramda": "^0.26.1"
   },
   "devDependencies": {
