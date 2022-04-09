@@ -29,7 +29,7 @@
     "express-routes-versioning": "^1.0.1",
     "json-api-error": "^1.1.0",
     "jsonwebtoken": "^8.5.1",
-    "moment": "^2.24.0",
+    "moment": "^2.29.2",
     "passport": "^0.4.0",
     "passport-jwt": "^4.0.0",
     "ramda": "^0.26.1"
