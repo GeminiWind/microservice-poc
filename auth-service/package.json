@@ -28,7 +28,7 @@
     "express-prometheus-middleware": "^0.8.5",
     "express-routes-versioning": "^1.0.1",
     "json-api-error": "^1.1.0",
-    "jsonwebtoken": "^8.5.1",
+    "jsonwebtoken": "^9.0.0",
     "moment": "^2.24.0",
     "passport": "^0.4.0",
     "passport-jwt": "^4.0.0",
